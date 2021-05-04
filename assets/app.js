@@ -1,16 +1,20 @@
-import {render} from 'react-dom';
-import React from "react";
+import React from 'react';
+import ReactDom from 'react-dom';
 import App from "./js";
-// import {Provider} from "react-redux";
+import DefaultThemeProvider from "./js/Theme/DefaultThemeProvider";
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('la');
+
     const rootComponent = (
-        // <Provider store={store}>
+        <DefaultThemeProvider>
             <App/>
-        // </Provider>
+        </DefaultThemeProvider>
     );
 
     const node = document.getElementById('root');
-    render(rootComponent, node);
+    ReactDom.render(rootComponent, node);
 });
+
+

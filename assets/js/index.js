@@ -1,13 +1,16 @@
-import React from 'react';
-import {Redirect, Route, BrowserRouter as Router, Switch} from "react-router-dom";
+import React from "react";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Home from "./Components/Home";
+import Auth from "./Components/Auth";
 
 function App() {
+
     return (
         <Router>
             <Switch>
-                <Redirect exact from="/" to="/home"/>
+                {/*<Redirect exact from="/" to="/register"/>*/}
                 <Route exact path="/home" component={Home}/>
+                <Route exact path="/auth" component={Auth}/>
             </Switch>
         </Router>
     );
