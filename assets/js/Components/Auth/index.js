@@ -1,47 +1,16 @@
 import React from 'react';
-import {makeStyles, Paper, Tabs, Tab, Grid, Box, TextField, Button, Typography, Link} from "@material-ui/core";
-import {AccountCircle, Lock as LockIcon} from "@material-ui/icons";
+import {makeStyles, Paper, Tabs, Tab, Grid} from "@material-ui/core";
+import LoginForm from "./Login";
+import RegisterForm from "./Register";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        maxWidth: 600,
+        minWidth: 500,
         minHeight: 400,
         margin: 'auto',
     },
-    padding: {
-        padding: theme.spacing(2),
-    },
-    margin: {
-        margin: theme.spacing(1),
-    },
-    marginTop: {
-        marginTop: 20,
-    }
 }));
-
-function TabPanel(props) {
-    const classes = useStyles();
-    const {children, value, index, ...other} = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`wrapped-tabpanel-${index}`}
-            aria-labelledby={`wrapped-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={1}>
-                    <Grid container spacing={1} alignItems="flex-end" justify="center">
-                        {children}
-                    </Grid>
-                </Box>
-            )};
-        </div>
-    );
-};
 
 function a11yProps(index) {
     return {
@@ -53,7 +22,7 @@ function a11yProps(index) {
 export default function Auth() {
     const classes = useStyles();
     const [value, setValue] = React.useState('connexion');
-    const preventDefault = (event) => event.preventDefault();
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -81,74 +50,8 @@ export default function Auth() {
                         <Tab label="CONNEXION" value='connexion' wrapped {...a11yProps('connexion')}/>
                         <Tab label="INSCRIPTION" value='inscription' wrapped {...a11yProps('inscription')}/>
                     </Tabs>
-                    <TabPanel value={value} index="connexion">
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item>
-                                <AccountCircle />
-                            </Grid>
-                            <Grid item>
-                                <TextField id="username" label="Nom d'utilisateur" />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item>
-                                <LockIcon />
-                            </Grid>
-                            <Grid item>
-                                <TextField id="password" label="Mot de passe" />
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item className={classes.marginTop}>
-                                <Button variant="contained" color="secondary">
-                                    SE CONNECTER
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item className={classes.marginTop}>
-                                <Link href="#" onClick={preventDefault}>
-                                    Mot de passe oublié ?
-                                </Link>
-                            </Grid>
-                        </Grid>
-
-                    </TabPanel>
-                    <TabPanel value={value} index="inscription">
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item>
-                                <AccountCircle />
-                            </Grid>
-                            <Grid item>
-                                <TextField id="email" label="Email" />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item>
-                                <LockIcon />
-                            </Grid>
-                            <Grid item>
-                                <TextField id="password" label="Mot de passe" />
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item>
-                                <LockIcon />
-                            </Grid>
-                            <Grid item>
-                                <TextField id="password_verify" label="Vérification mot de passe" />
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
-                            <Grid item>
-                                <Button variant="contained" color="secondary">
-                                    S'INSCRIRE
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </TabPanel>
+                    <LoginForm value={value} />
+                    <RegisterForm value={value} />
                 </Paper>
             </Grid>
         </Grid>
