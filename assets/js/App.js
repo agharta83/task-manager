@@ -1,15 +1,15 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Home from "./Components/Home";
-import Auth from "./Components/Auth";
+import Home from "./features/Home";
+import Auth from "./features/Auth";
+import { PrivateRoute } from './helpers/PrivateRoute';
 
 function App() {
 
     return (
         <Router>
             <Switch>
-                {/*<Redirect exact from="/" to="/register"/>*/}
-                <Route exact path="/home" component={Home}/>
+                <PrivateRoute exact path="/" component={Home}/>
                 <Route exact path="/auth" component={Auth}/>
             </Switch>
         </Router>

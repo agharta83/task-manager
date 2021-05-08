@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Grid, Link, makeStyles, TextField} from "@material-ui/core";
 import {AccountCircle, Lock as LockIcon} from "@material-ui/icons";
-import TabPanel from "../../Reusable/TabPanel";
+import TabPanel from "../../../Reusable/TabPanel";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
