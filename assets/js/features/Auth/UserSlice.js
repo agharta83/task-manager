@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {API_USER, requestUser} from "../../ApiConfig";
+import {API_USER} from "../../ApiConfig";
 import axios from "axios";
 
 export const registerUser = createAsyncThunk(
@@ -29,6 +29,34 @@ export const registerUser = createAsyncThunk(
     }
 )
 
+export const loginUser = createAsyncThunk(
+    'user/login',
+    async ({email, password}, thunkAPI) => {
+        try {
+            const response = await axios.post(
+                API_USER + 'login',
+                JSON.stringify({email, password}),
+                {
+                    withCredentials: true,
+                    headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
+                }
+            );
+            console.log(response);
+            let data = await response.data;
+
+            if (response.status === 200) {
+                // localStorage.setItem('token', data.token);
+                console.log(data);
+            } else {
+                return thunkAPI.rejectWithValue(data);
+            }
+        } catch (error) {
+            console.log(error);
+            return thunkAPI.rejectWithValue((error.response.data.errors));
+        }
+    }
+)
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -52,17 +80,32 @@ export const userSlice = createSlice({
         [registerUser.fulfilled]: (state, { payload }) => {
             state.isFetching = false;
             state.isSuccess = true;
-            state.isError = false;
             state.email = payload.email;
         },
         [registerUser.pending]: (state) => {
             state.isFetching = true;
         },
-        [registerUser.rejected]: (state, { payload }) => {
+        [registerUser.rejected]: (state, {payload}) => {
             state.isFetching = false;
             state.isError = true;
             state.errorMessage = payload;
-        }},
+        },
+        [loginUser.fulfilled]: (state, {payload}) => {
+            state.email = payload.email;
+            state.isFetching = false;
+            state.isSuccess = true;
+
+            return state;
+        },
+        [loginUser.pending]: (state) => {
+            state.isFetching = true;
+        },
+        [loginUser.rejected]: (state, {payload}) => {
+            state.isFetching = false;
+            state.isError = true;
+            state.errorMessage = payload;
+        }
+    },
 });
 
 export const { clearState } = userSlice.actions;

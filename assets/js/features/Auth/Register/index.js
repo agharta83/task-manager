@@ -16,9 +16,11 @@ const validate = values => {
     } else if (!values.email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
         errors.email = 'Email invalide';
     }
+
     if (!values.password) {
         errors.password = 'Champ requis';
     }
+
     if (!values.plainPassword) {
         errors.plainPassword = 'Champ requis';
     } else if(values.plainPassword !== values.password) {
@@ -90,7 +92,8 @@ const RegisterForm = ({value}) => {
                                                 onMouseDown={handleMouseDownPassword}
                                             >
                                                 {showPassword ? <Visibility/> : <VisibilityOff/>}
-                                            </IconButton></InputAdornment>
+                                            </IconButton>
+                                        </InputAdornment>
                                 }}/>
                             </Grid>
                         </Grid>
