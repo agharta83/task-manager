@@ -6,7 +6,6 @@ import TabPanel from "../../../Reusable/TabPanel";
 import {Form} from 'react-final-form';
 import {useDispatch, useSelector} from "react-redux";
 import {clearState, registerUser, userSelector} from "../UserSlice";
-import {useHistory} from "react-router";
 import {toast} from "react-hot-toast";
 
 const validate = values => {
@@ -20,10 +19,10 @@ const validate = values => {
     if (!values.password) {
         errors.password = 'Champ requis';
     }
-    if (!values.passwordVerify) {
-        errors.passwordVerify = 'Champ requis';
-    } else if(values.passwordVerify !== values.password) {
-        errors.passwordVerify = "Le mot de passe doit être identique"
+    if (!values.plainPassword) {
+        errors.plainPassword = 'Champ requis';
+    } else if(values.plainPassword !== values.password) {
+        errors.plainPassword = "Le mot de passe doit être identique"
     }
 
     return errors;
@@ -40,7 +39,6 @@ const RegisterForm = ({value}) => {
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
     const {isFetching, isSuccess, isError, errorMessage} = useSelector(userSelector);
-    const history = useHistory();
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -51,20 +49,12 @@ const RegisterForm = ({value}) => {
     };
 
     const mainHandleSubmit = data => {
-        console.log(data);
         dispatch(registerUser(data));
     };
 
     useEffect(() => {
-        return () => {
-            dispatch(clearState());
-        };
-    }, []);
-
-    useEffect(() => {
         if (isSuccess) {
-            dispatch(clearState());
-            history.push('/');
+            toast.success('Un email d\'activation vous a été envoyé');
         }
 
         if (isError) {
@@ -76,6 +66,7 @@ const RegisterForm = ({value}) => {
     return (
         <TabPanel value={value} index="inscription">
             <Form
+                name="registration_form"
                 onSubmit={mainHandleSubmit}
                 validate={validate}
                 render={({handleSubmit, form, submitting, values}) => (
@@ -105,7 +96,7 @@ const RegisterForm = ({value}) => {
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
                             <Grid item>
-                                <TextField id="passwordVerify" label="Confirmation mot de passe" name="passwordVerify" required={true} type={showPassword ? 'text' : 'password'}InputProps={{
+                                <TextField id="plainPassword" label="Confirmation mot de passe" name="plainPassword" required={true} type={showPassword ? 'text' : 'password'}InputProps={{
                                     startAdornment: <InputAdornment position="start"><LockIcon/></InputAdornment>,
                                     endAdornment:
                                         <InputAdornment position="end">
@@ -121,7 +112,7 @@ const RegisterForm = ({value}) => {
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
                             <Grid item>
-                                <Button variant="contained" color="secondary" type="submit" disabled={submitting || isFetching}>
+                                <Button variant="contained" color="secondary" type="submit" name="registration_form[submit]" disabled={submitting || isFetching}>
                                     S'INSCRIRE
                                 </Button>
                             </Grid>

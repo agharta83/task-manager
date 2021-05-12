@@ -1,23 +1,30 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {API_USER, requestUser} from "../../ApiConfig";
+import axios from "axios";
 
 export const registerUser = createAsyncThunk(
     'user/register',
-    async ({email, password}, thunkAPI) => {
+    async ({email, plainPassword}, thunkAPI) => {
         try {
-            console.log('request data :', email, password);
-            const response = await requestUser.post(API_USER + 'register', JSON.stringify(email, password));
-            let data = await response.json();
+            const response = await axios.post(
+                API_USER + 'register',
+                JSON.stringify({email, plainPassword}),
+                {
+                    withCredentials: true,
+                    headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
+                }
+            );
+            console.log(response.status === 200);
+            let data = await response.data;
 
             if (response.status === 200) {
-                localStorage.setItem('token', data.token);
-                return {...data, email: email};
+                return data;
             } else {
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (error) {
-            console.log('Error', error.response.data);
-            return thunkAPI.rejectWithValue(error.response.data);
+            console.log('la', error);
+            return thunkAPI.rejectWithValue(error.response.data.errors.email);
         }
     }
 )
@@ -43,10 +50,10 @@ export const userSlice = createSlice({
     },
     extraReducers: {
         [registerUser.fulfilled]: (state, { payload }) => {
-            console.log('payload :', payload);
             state.isFetching = false;
             state.isSuccess = true;
-            state.email = payload.user.email;
+            state.isError = false;
+            state.email = payload.email;
         },
         [registerUser.pending]: (state) => {
             state.isFetching = true;
@@ -54,7 +61,7 @@ export const userSlice = createSlice({
         [registerUser.rejected]: (state, { payload }) => {
             state.isFetching = false;
             state.isError = true;
-            state.errorMessage = payload.message;
+            state.errorMessage = payload;
         }},
 });
 
