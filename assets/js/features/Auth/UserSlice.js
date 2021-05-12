@@ -14,7 +14,7 @@ export const registerUser = createAsyncThunk(
                     headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
                 }
             );
-            console.log(response.status === 200);
+
             let data = await response.data;
 
             if (response.status === 200) {
@@ -23,7 +23,6 @@ export const registerUser = createAsyncThunk(
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (error) {
-            console.log('la', error);
             return thunkAPI.rejectWithValue(error.response.data.errors.email);
         }
     }
@@ -65,7 +64,7 @@ export const userSlice = createSlice({
         isFetching: false,
         isSuccess: false,
         isError: false,
-        errorMessage: '',
+        errorMessage: [],
     },
     reducers: {
         clearState: (state) => {

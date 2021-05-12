@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles, Paper, Tabs, Tab, Grid} from "@material-ui/core";
 import LoginForm from "./Login";
 import RegisterForm from "./Register";
+import {toast} from "react-hot-toast";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,7 +22,7 @@ function a11yProps(index) {
 
 export default function Auth() {
     const classes = useStyles();
-    const [value, setValue] = React.useState('connexion');
+    const [value, setValue] = useState('connexion');
 
 
     const handleChange = (event, newValue) => {
