@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import Home from "./features/Home";
+import Dashboard from "./features/Dashboad";
 import Auth from "./features/Auth";
 import {PrivateRoute} from './helpers/PrivateRoute';
 import {Redirect} from "react-router";
@@ -24,8 +24,7 @@ function App() {
     return (
         <Router>
             <Switch>
-                <PrivateRoute exact path="/home" component={Home}/>
-                {/*<Route exact path="/home" component={Home}/>*/}
+                <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/auth" component={Auth} />
                 <Redirect from="/" to="/auth" />
             </Switch>

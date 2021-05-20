@@ -39,7 +39,7 @@ const LoginForm = ({value}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const { isFetching, isSuccess, isError, errorMessage } = useSelector(userSelector);
+    const { isFetching, isLoginSuccess, isError, errorMessage } = useSelector(userSelector);
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => {
@@ -52,18 +52,26 @@ const LoginForm = ({value}) => {
 
     const mainHandleSubmit = data => {
         dispatch(loginUser(data));
-    }
+    };
 
     useEffect(() => {
-        if (isSuccess) {
+        return () => {
+            dispatch(clearState());
+        };
+    }, []);
 
+    useEffect(() => {
+        if (isLoginSuccess) {
+            history.push('/dashboard');
+            toast.success('Bienvenu');
+            dispatch(clearState());
         }
 
         if (isError) {
             toast.error(errorMessage);
             dispatch(clearState());
         }
-    }, [isSuccess, isError]);
+    }, [isLoginSuccess, isError]);
 
     return (
         <TabPanel value={value} index="connexion">

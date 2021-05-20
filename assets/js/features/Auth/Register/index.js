@@ -40,7 +40,7 @@ const RegisterForm = ({value}) => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
-    const {isFetching, isSuccess, isError, errorMessage} = useSelector(userSelector);
+    const {isFetching, isRegisterSuccess, isError, errorMessage} = useSelector(userSelector);
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -55,7 +55,13 @@ const RegisterForm = ({value}) => {
     };
 
     useEffect(() => {
-        if (isSuccess) {
+        return () => {
+            dispatch(clearState());
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isRegisterSuccess) {
             toast.success('Un email d\'activation vous a été envoyé');
         }
 
@@ -63,7 +69,7 @@ const RegisterForm = ({value}) => {
             toast.error(errorMessage);
             dispatch(clearState());
         }
-    }, [isSuccess, isError]);
+    }, [isRegisterSuccess, isError]);
 
     return (
         <TabPanel value={value} index="inscription">
