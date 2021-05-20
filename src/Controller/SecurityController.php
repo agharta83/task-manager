@@ -52,10 +52,13 @@ class SecurityController extends BaseController
     {
         $user = $this->getUser();
 
-        return $this->json([
+        $data = [
             'email' => $user->getEmail(),
             'username' => $user->getUsername(),
             'roles' => $user->getRoles(),
-        ]);
+        ];
+
+        return $this->createApiResponse($data, 200);
+
     }
 }
