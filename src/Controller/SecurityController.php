@@ -54,7 +54,6 @@ class SecurityController extends BaseController
 
         $data = [
             'email' => $user->getEmail(),
-            'username' => $user->getUsername(),
             'roles' => $user->getRoles(),
         ];
 

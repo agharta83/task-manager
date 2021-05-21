@@ -112,12 +112,12 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return $credentials['password'];
     }
 
+
     /**
      * @param Request $request
      * @param TokenInterface $token
      * @param string $providerKey
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response|null
-     * @throws \Exception
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
@@ -126,7 +126,7 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         }
 
         // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('Une erreur est survenue');
+        // throw new \Exception('Une erreur est survenue');
 
     }
 

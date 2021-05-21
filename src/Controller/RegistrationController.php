@@ -90,7 +90,7 @@ class RegistrationController extends BaseController
             'main'
         );
 
-        return $this->createApiResponse($user, 200);
+        return $this->createApiResponse($user->getEmail(), 200);
     }
 
     /**

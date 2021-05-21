@@ -1,6 +1,9 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {API_USER} from "../../ApiConfig";
 import axios from "axios";
+import {schema} from "normalizr";
+
+const userEntity = new schema.Entity("user");
 
 export const registerUser = createAsyncThunk(
     'user/register',
@@ -14,7 +17,6 @@ export const registerUser = createAsyncThunk(
                     headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
                 }
             );
-
             let data = await response.data;
 
             if (response.status === 200) {
@@ -40,7 +42,6 @@ export const loginUser = createAsyncThunk(
                     headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
                 }
             );
-            console.log(response);
             let data = await response.data;
 
             if (response.status === 200) {
@@ -60,9 +61,10 @@ export const loginUser = createAsyncThunk(
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-        username: '',
         email: '',
         roles : [],
+        isAuthenticated: false,
+        forgotPassword : false,
         isFetching: false,
         isRegisterSuccess: false,
         isLoginSuccess: false,
@@ -72,12 +74,20 @@ export const userSlice = createSlice({
     reducers: {
         clearState: (state) => {
             state.isError = false;
-            state.isRegisterSuccessSuccess = false;
-            state.isLoginSuccessSuccess = false;
+            state.isRegisterSuccess = false;
+            state.isLoginSuccess = false;
             state.isFetching = false;
 
             return state;
         },
+        showForgotPasswordForm: (state) => {
+            state.forgotPassword = true;
+
+            return state;
+        },
+        resetPassword: (state) => {
+            return console.log('reset password function');
+        }
     },
     extraReducers: {
         [registerUser.fulfilled]: (state, { payload }) => {
@@ -95,8 +105,8 @@ export const userSlice = createSlice({
         },
         [loginUser.fulfilled]: (state, {payload}) => {
             state.email = payload.email;
-            state.username = payload.username;
             state.roles = payload.roles;
+            state.isAuthenticated = true;
             state.isFetching = false;
             state.isLoginSuccess = true;
 
@@ -113,6 +123,6 @@ export const userSlice = createSlice({
     },
 });
 
-export const { clearState } = userSlice.actions;
+export const { clearState, showForgotPasswordForm, resetPassword } = userSlice.actions;
 
 export const userSelector = (state) => state.user;

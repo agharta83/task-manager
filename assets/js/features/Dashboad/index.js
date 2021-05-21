@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Home = () => (
+const Dashboard = () => (
     <div>
-        <h1>HOME</h1>
+        <h1>DASHBOARD</h1>
     </div>
 );
 
-export default Home;
+export default Dashboard;

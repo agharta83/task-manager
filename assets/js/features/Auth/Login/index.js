@@ -6,7 +6,7 @@ import TabPanel from "../../../Reusable/TabPanel";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router";
 import {Form} from "react-final-form";
-import {clearState, loginUser, userSelector} from "../UserSlice";
+import {clearState, loginUser, showForgotPasswordForm, userSelector} from "../UserSlice";
 import {toast} from "react-hot-toast";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,6 @@ const validate = values => {
 };
 
 const LoginForm = ({value}) => {
-    const preventDefault = (event) => event.preventDefault();
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -53,6 +52,10 @@ const LoginForm = ({value}) => {
     const mainHandleSubmit = data => {
         dispatch(loginUser(data));
     };
+
+    const handleForgotPassword = () => {
+        dispatch(showForgotPasswordForm());
+    }
 
     useEffect(() => {
         return () => {
@@ -114,7 +117,7 @@ const LoginForm = ({value}) => {
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
                             <Grid item className={classes.marginTop}>
-                                <Link href="#" onClick={preventDefault}>
+                                <Link href="#" onClick={handleForgotPassword}>
                                     Mot de passe oublié ?
                                 </Link>
                             </Grid>
