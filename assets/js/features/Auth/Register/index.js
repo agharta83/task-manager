@@ -63,6 +63,7 @@ const RegisterForm = ({value}) => {
     useEffect(() => {
         if (isRegisterSuccess) {
             toast.success('Un email d\'activation vous a été envoyé');
+            dispatch(clearState());
         }
 
         if (isError) {

@@ -1,11 +1,12 @@
-import React from 'react';
-import {Button, Grid, InputAdornment, makeStyles} from "@material-ui/core";
+import React, {useEffect} from 'react';
+import {Button, Grid, InputAdornment, makeStyles, Typography} from "@material-ui/core";
 import {TextField} from "mui-rff";
 import {AccountCircle} from "@material-ui/icons";
 import {Form} from "react-final-form";
-import {resetPassword, userSelector} from "../UserSlice";
+import {clearState, sendMailForgotPassword, userSelector} from "../UserSlice";
 import {useDispatch, useSelector} from "react-redux";
 import TabPanel from "../../../Reusable/TabPanel";
+import {toast} from "react-hot-toast";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -31,14 +32,35 @@ const validate = values => {
 const ForgotPasswordForm = ({value}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {isFetching, isError, errorMessage} = useSelector(userSelector);
+    const {isFetching, isError, errorMessage, isSendMailSuccess} = useSelector(userSelector);
 
     const mainHandleSubmit = data => {
-        dispatch(resetPassword(data));
+        dispatch(sendMailForgotPassword(data));
     };
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearState());
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isSendMailSuccess) {
+            toast.success('Un mail de réinitialisation a été envoyé !');
+            dispatch(clearState());
+        }
+
+        if (isError) {
+            toast.error(errorMessage);
+            dispatch(clearState());
+        }
+    }, [isSendMailSuccess, isError]);
 
     return (
         <TabPanel value={value} index="forgotPassword">
+            <Typography variant="subtitle2" align='center' gutterBottom className={classes.marginTop}>
+                Veuillez saisir votre adresse mail afin de commencer le processus de réinitialisation de votre mot de passe
+            </Typography>
             <Form
                 name="forgot_password_form"
                 onSubmit={mainHandleSubmit}
@@ -60,7 +82,7 @@ const ForgotPasswordForm = ({value}) => {
                             <Grid item className={classes.marginTop}>
                                 <Button variant="contained" color="secondary" type="submit"
                                         name="login_form[submit]" disabled={submitting || isFetching}>
-                                    REINITIALISER LE MOT DE PASSE
+                                    ENVOYER EMAIL
                                 </Button>
                             </Grid>
                         </Grid>

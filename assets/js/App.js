@@ -5,6 +5,7 @@ import Auth from "./features/Auth";
 import {PrivateRoute} from './helpers/PrivateRoute';
 import {Redirect} from "react-router";
 import {toast} from "react-hot-toast";
+import ResetPasswordForm from "./features/Auth/ResetPassword";
 
 function getEmailVerify() {
     let url = new URL(window.location.href);
@@ -26,7 +27,9 @@ function App() {
             <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/auth" component={Auth} />
+                <Route exact path="/user/reset-password" component={ResetPasswordForm} />
                 <Redirect from="/" to="/auth" />
+                {/*<Redirect from="/user/reset-password" to="/reset-password" />*/}
             </Switch>
         </Router>
     );

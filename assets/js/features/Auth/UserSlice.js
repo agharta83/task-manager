@@ -52,8 +52,59 @@ export const loginUser = createAsyncThunk(
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data.errors);
+        }
+    }
+)
+
+export const sendMailForgotPassword = createAsyncThunk(
+    'user/resetPassword',
+    async({email}, thunkAPI) => {
+        try {
+            const response = await axios.post(
+                API_USER + 'reset-password/forgot-password',
+                JSON.stringify({email}),
+                {
+                    withCredentials: true,
+                    headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
+                }
+            );
+            let data = await response.data;
+
+            if (response.status === 200) {
+                return data;
+            } else {
+                return thunkAPI.rejectWithValue(data);
+            }
+        } catch (error) {
             console.log(error);
-            return thunkAPI.rejectWithValue((error.response.data.errors));
+            return thunkAPI.rejectWithValue(error.response.data.errors);
+        }
+    }
+)
+
+export const resetPassword = createAsyncThunk(
+    'user/resetPassword',
+    async({password, plainPassword}, thunkAPI) => {
+        try {
+            const response = await axios.post(
+                API_USER + 'reset-password/reset-form',
+                JSON.stringify({password, plainPassword}),
+                {
+                    withCredentials: true,
+                    headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
+                }
+            );
+            let data = await response.data;
+
+            if (response.status === 200) {
+                return data;
+            } else {
+                return thunkAPI.rejectWithValue(data);
+            }
+        } catch (error) {
+            console.log(error);
+            return thunkAPI.rejectWithValue(error.response.data.errors);
         }
     }
 )
@@ -68,6 +119,8 @@ export const userSlice = createSlice({
         isFetching: false,
         isRegisterSuccess: false,
         isLoginSuccess: false,
+        isSendMailSuccess: false,
+        isResetPasswordSuccess: false,
         isError: false,
         errorMessage: [],
     },
@@ -76,6 +129,8 @@ export const userSlice = createSlice({
             state.isError = false;
             state.isRegisterSuccess = false;
             state.isLoginSuccess = false;
+            state.isSendMailSuccess = false;
+            state.isResetPasswordSuccess = false;
             state.isFetching = false;
 
             return state;
@@ -85,9 +140,6 @@ export const userSlice = createSlice({
 
             return state;
         },
-        resetPassword: (state) => {
-            return console.log('reset password function');
-        }
     },
     extraReducers: {
         [registerUser.fulfilled]: (state, { payload }) => {
@@ -119,10 +171,38 @@ export const userSlice = createSlice({
             state.isFetching = false;
             state.isError = true;
             state.errorMessage = payload;
+        },
+        [sendMailForgotPassword.fulfilled]: (state) => {
+            state.isSendMailSuccess = true;
+            state.isFetching = false;
+
+            return state;
+        },
+        [sendMailForgotPassword.pending]: (state) => {
+            state.isFetching = true;
+        },
+        [sendMailForgotPassword.rejected]: (state, {payload}) => {
+            state.isFetching = false;
+            state.isError = true;
+            state.errorMessage = payload;
+        },
+        [resetPassword.fulfilled]: (state) => {
+            state.isResetPasswordSuccess = true;
+            state.isFetching = false;
+
+            return state;
+        },
+        [resetPassword.pending]: (state) => {
+            state.isFetching = true;
+        },
+        [resetPassword.rejected]: (state, {payload}) => {
+            state.isFetching = false;
+            state.isError = true;
+            state.errorMessage = payload;
         }
     },
 });
 
-export const { clearState, showForgotPasswordForm, resetPassword } = userSlice.actions;
+export const { clearState, showForgotPasswordForm } = userSlice.actions;
 
 export const userSelector = (state) => state.user;
