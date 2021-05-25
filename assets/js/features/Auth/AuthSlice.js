@@ -109,8 +109,8 @@ export const resetPassword = createAsyncThunk(
     }
 )
 
-export const userSlice = createSlice({
-    name: 'user',
+export const authSlice = createSlice({
+    name: 'auth',
     initialState: {
         email: '',
         roles : [],
@@ -203,6 +203,6 @@ export const userSlice = createSlice({
     },
 });
 
-export const { clearState, showForgotPasswordForm } = userSlice.actions;
+export const { clearState, showForgotPasswordForm } = authSlice.actions;
 
-export const userSelector = (state) => state.user;
+export const authSelector = (state) => state.auth;

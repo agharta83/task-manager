@@ -1,11 +1,22 @@
 import React, {useEffect, useState} from "react";
-import {Button, Grid, IconButton, InputAdornment, makeStyles, Paper, Tab, Tabs, Typography} from "@material-ui/core";
+import {
+    Button,
+    CircularProgress,
+    Grid,
+    IconButton,
+    InputAdornment,
+    makeStyles,
+    Paper,
+    Tab,
+    Tabs,
+    Typography
+} from "@material-ui/core";
 import {TextField} from 'mui-rff';
 import {Lock as LockIcon, Visibility, VisibilityOff} from "@material-ui/icons";
 import {Form} from 'react-final-form';
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-hot-toast";
-import {clearState, resetPassword, userSelector} from "../UserSlice";
+import {authSelector, clearState, resetPassword} from "../AuthSlice";
 import {useHistory} from "react-router";
 
 const validate = values => {
@@ -33,7 +44,18 @@ const useStyles = makeStyles((theme) => ({
     },
     paddingTop: {
         paddingTop: 20,
-    }
+    },
+    wrapper: {
+        margin: theme.spacing(1),
+        position: 'relative',
+    },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
 }));
 
 function a11yProps(index) {
@@ -48,7 +70,7 @@ const ResetPasswordForm = ({value}) => {
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
-    const {isFetching, isResetPasswordSuccess, isError, errorMessage} = useSelector(userSelector);
+    const {isFetching, isResetPasswordSuccess, isError, errorMessage} = useSelector(authSelector);
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -137,11 +159,12 @@ const ResetPasswordForm = ({value}) => {
                                     </Grid>
                                     <Grid container spacing={1} alignItems="flex-end" justify="center"
                                           className={classes.padding}>
-                                        <Grid item className={classes.marginTop}>
+                                        <Grid item className={clsx(classes.marginTop, classes.wrapper)}>
                                             <Button variant="contained" color="secondary" type="submit"
                                                     name="change_password_form[submit]" disabled={submitting || isFetching}>
                                                 REINITIALISER LE MOT DE PASSE
                                             </Button>
+                                            {isFetching && <CircularProgress size={24} className={classes.buttonProgress} />}
                                         </Grid>
                                     </Grid>
                                 </form>

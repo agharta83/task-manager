@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
-import {Button, Grid, InputAdornment, makeStyles, Typography} from "@material-ui/core";
+import {Button, CircularProgress, Grid, InputAdornment, makeStyles, Typography} from "@material-ui/core";
 import {TextField} from "mui-rff";
 import {AccountCircle} from "@material-ui/icons";
 import {Form} from "react-final-form";
-import {clearState, sendMailForgotPassword, userSelector} from "../UserSlice";
+import {authSelector, clearState, sendMailForgotPassword} from "../AuthSlice";
 import {useDispatch, useSelector} from "react-redux";
 import TabPanel from "../../../Reusable/TabPanel";
 import {toast} from "react-hot-toast";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -14,7 +15,18 @@ const useStyles = makeStyles((theme) => ({
     },
     marginTop: {
         marginTop: 20,
-    }
+    },
+    wrapper: {
+        margin: theme.spacing(1),
+        position: 'relative',
+    },
+    buttonProgress: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12,
+    },
 }));
 
 const validate = values => {
@@ -32,7 +44,7 @@ const validate = values => {
 const ForgotPasswordForm = ({value}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const {isFetching, isError, errorMessage, isSendMailSuccess} = useSelector(userSelector);
+    const {isFetching, isError, errorMessage, isSendMailSuccess} = useSelector(authSelector);
 
     const mainHandleSubmit = data => {
         dispatch(sendMailForgotPassword(data));
@@ -79,11 +91,12 @@ const ForgotPasswordForm = ({value}) => {
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center"
                               className={classes.padding}>
-                            <Grid item className={classes.marginTop}>
+                            <Grid item className={clsx(classes.marginTop, classes.wrapper)}>
                                 <Button variant="contained" color="secondary" type="submit"
                                         name="login_form[submit]" disabled={submitting || isFetching}>
                                     ENVOYER EMAIL
                                 </Button>
+                                {isFetching && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Grid>
                         </Grid>
                     </form>

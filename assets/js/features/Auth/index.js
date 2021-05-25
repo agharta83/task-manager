@@ -4,7 +4,7 @@ import LoginForm from "./Login";
 import RegisterForm from "./Register";
 import {toast} from "react-hot-toast";
 import {useSelector} from "react-redux";
-import {userSelector} from "./UserSlice";
+import {authSelector} from "./AuthSlice";
 import ForgotPasswordForm from "./ForgotPassword";
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +27,7 @@ export default function Auth() {
     const classes = useStyles();
     const [value, setValue] = useState('connexion');
     const [valueForReset, setValueForReset] = useState('forgotPassword');
-    const { forgotPassword } = useSelector(userSelector);
+    const { forgotPassword } = useSelector(authSelector);
 
 
     const handleChange = (event, newValue) => {
