@@ -3,11 +3,12 @@ import {Button, CircularProgress, Grid, InputAdornment, makeStyles, Typography} 
 import {TextField} from "mui-rff";
 import {AccountCircle} from "@material-ui/icons";
 import {Form} from "react-final-form";
-import {authSelector, clearState, sendMailForgotPassword} from "../AuthSlice";
+import {authSelector, clearState} from "../AuthSlice";
 import {useDispatch, useSelector} from "react-redux";
 import TabPanel from "../../../Reusable/TabPanel";
 import {toast} from "react-hot-toast";
 import clsx from "clsx";
+import {sendMailForgotPassword} from "../authThunk";
 
 const useStyles = makeStyles((theme) => ({
     padding: {

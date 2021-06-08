@@ -13,7 +13,7 @@ function TabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Zoom in={value} style={{transitionDelay: value ? '500ms' : '0ms'}}>
+                <Zoom in={true} style={{transitionDelay: value ? '500ms' : '0ms'}}>
                     <Box p={1}>
                         <Grid container spacing={1} alignItems="flex-end" justify="center">
                             {children}

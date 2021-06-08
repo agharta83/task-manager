@@ -6,9 +6,10 @@ import TabPanel from "../../../Reusable/TabPanel";
 import {useDispatch, useSelector} from "react-redux";
 import {useHistory} from "react-router";
 import {Form} from "react-final-form";
-import {authSelector, clearState, loginUser, showForgotPasswordForm} from "../AuthSlice";
+import {authSelector, clearState, showForgotPasswordForm} from "../AuthSlice";
 import {toast} from "react-hot-toast";
 import clsx from "clsx";
+import {loginUser} from "../authThunk";
 
 const useStyles = makeStyles((theme) => ({
     padding: {

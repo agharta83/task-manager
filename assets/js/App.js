@@ -29,7 +29,6 @@ function App() {
                 <Route exact path="/auth" component={Auth} />
                 <Route exact path="/user/reset-password" component={ResetPasswordForm} />
                 <Redirect from="/" to="/auth" />
-                {/*<Redirect from="/user/reset-password" to="/reset-password" />*/}
             </Switch>
         </Router>
     );

@@ -16,8 +16,9 @@ import {Lock as LockIcon, Visibility, VisibilityOff} from "@material-ui/icons";
 import {Form} from 'react-final-form';
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-hot-toast";
-import {authSelector, clearState, resetPassword} from "../AuthSlice";
+import {authSelector, clearState} from "../AuthSlice";
 import {useHistory} from "react-router";
+import {resetPassword} from "../authThunk";
 
 const validate = values => {
     const errors = {};

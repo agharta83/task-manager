@@ -5,8 +5,9 @@ import {AccountCircle, Lock as LockIcon, Visibility, VisibilityOff} from "@mater
 import TabPanel from "../../../Reusable/TabPanel";
 import {Form} from 'react-final-form';
 import {useDispatch, useSelector} from "react-redux";
-import {authSelector, clearState, registerUser} from "../AuthSlice";
+import {authSelector, clearState} from "../AuthSlice";
 import {toast} from "react-hot-toast";
+import {registerUser} from "../authThunk";
 
 const validate = values => {
     const errors = {};

@@ -53,8 +53,7 @@ class SecurityController extends BaseController
         $user = $this->getUser();
 
         $data = [
-            'email' => $user->getEmail(),
-            'roles' => $user->getRoles(),
+            'isLogged' => true,
         ];
 
         return $this->createApiResponse($data, 200);
