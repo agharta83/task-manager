@@ -6,6 +6,7 @@ import {PrivateRoute} from './helpers/PrivateRoute';
 import {Redirect} from "react-router";
 import {toast} from "react-hot-toast";
 import ResetPasswordForm from "./features/Auth/ResetPassword";
+import TasksList from "./features/TasksList";
 
 function getEmailVerify() {
     let url = new URL(window.location.href);
@@ -21,11 +22,11 @@ function App() {
         toast.success('L\'adresse email a été vérifiée.');
     }
 
-
     return (
         <Router>
             <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <PrivateRoute exact path="/taskslist" component={TasksList} />
                 <Route exact path="/auth" component={Auth} />
                 <Route exact path="/user/reset-password" component={ResetPasswordForm} />
                 <Redirect from="/" to="/auth" />
