@@ -78,7 +78,7 @@ const LoginForm = ({value}) => {
 
     useEffect(() => {
         if (isLoginSuccess) {
-            history.push('/dashboard');
+            history.push('/home');
             toast.success('Bienvenu');
             dispatch(clearState());
         }

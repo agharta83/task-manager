@@ -14,6 +14,9 @@ const theme = createMuiTheme({
                     background: 'linear-gradient(to top, #e4e5d6, #aebdb0, #7b9690, #4f6f74, #2f4858)',
                     backgroundRepeat: 'no-repeat',
                     backgroundAttachment: 'fixed',
+                },
+                html: {
+                    overflow: 'hidden',
                 }
             }
         }
@@ -31,6 +34,9 @@ const theme = createMuiTheme({
             dark: '#286860',
         },
     },
+    typography: {
+        fontFamily: ['"Poppins"', 'Open Sans'].join(',')
+    }
 });
 
 const responsiveTheme = responsiveFontSizes(theme);
