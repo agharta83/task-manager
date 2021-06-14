@@ -5,7 +5,7 @@ export const Container = styled.div`
   position: fixed;
 
   .active {
-    border-right: 4px solid #fff;
+    border-right: 4px solid #C05749;
 
     img {
       filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg)
@@ -32,7 +32,7 @@ export const Button = styled.button`
   &::before,
   &::after {
     content: "";
-    background-color: #fff;
+    background-color: #C05749;
     height: 2px;
     width: 1rem;
     position: absolute;
@@ -76,7 +76,7 @@ export const Logo = styled.div`
 `;
 
 export const SlickBar = styled.ul`
-  color: #fff;
+  color: #C05749;
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -105,7 +105,7 @@ export const Item = styled(NavLink)`
   padding-left: 1rem;
 
   &:hover {
-    border-right: 4px solid #fff;
+    border-right: 4px solid #c05749;
 
     img {
       filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg)
@@ -116,8 +116,7 @@ export const Item = styled(NavLink)`
   img {
     width: 1.2rem;
     height: auto;
-    filter: invert(92%) sepia(4%) saturate(1033%) hue-rotate(169deg)
-      brightness(78%) contrast(85%);
+    filter: invert(89%) sepia(33%) saturate(764%) hue-rotate(302deg) brightness(101%) contrast(101%);
   }
 `;
 
@@ -153,7 +152,7 @@ export const Profile = styled.div`
     cursor: pointer;
 
     &:hover {
-      border: 2px solid #a4b2bc;
+      border: 2px solid #C05749;
       padding: 2px;
     }
   }
@@ -181,7 +180,7 @@ export const Name = styled.div`
   a {
     font-size: 0.8rem;
     text-decoration: none;
-    color: #a4b2bc;
+    color: #C05749;
 
     &:hover {
       text-decoration: underline;
