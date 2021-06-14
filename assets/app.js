@@ -5,7 +5,7 @@ import DefaultThemeProvider from "./js/Theme/DefaultThemeProvider";
 import {Toaster} from "react-hot-toast";
 import {Provider} from "react-redux";
 import store from "./js/Store/store";
-import "./styles/app.css";
+
 
 
 document.addEventListener('DOMContentLoaded', () => {

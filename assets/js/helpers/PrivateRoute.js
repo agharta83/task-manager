@@ -2,7 +2,7 @@ import React from "react";
 import {Redirect, Route} from 'react-router-dom';
 import styled from "styled-components";
 import {AnimatePresence} from "framer-motion";
-import Sidebar from "../features/SideBar";
+import Sidebar from "../features/Sidebar";
 
 const Pages = styled.div`
   width: 100vw;
@@ -21,6 +21,7 @@ const Pages = styled.div`
 
 export function PrivateRoute({component: Component, ...rest}) {
     const isAuth = localStorage.getItem('isLogged');
+    console.log(isAuth)
 
     return (
         <Route
@@ -40,4 +41,4 @@ export function PrivateRoute({component: Component, ...rest}) {
             }
         />
     );
-};
+}
