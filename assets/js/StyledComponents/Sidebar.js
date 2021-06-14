@@ -175,6 +175,7 @@ export const Name = styled.div`
 
   h4 {
     display: inline-block;
+    margin: 0;
   }
 
   a {
