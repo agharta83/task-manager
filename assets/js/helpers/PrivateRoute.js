@@ -21,7 +21,6 @@ const Pages = styled.div`
 
 export function PrivateRoute({component: Component, ...rest}) {
     const isAuth = localStorage.getItem('isLogged');
-    console.log(isAuth)
 
     return (
         <Route

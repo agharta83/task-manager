@@ -36,7 +36,7 @@ class SecurityController extends BaseController
     }
 
     /**
-     * @Route("/api/user/logout", name="app_logout")
+     * @Route("/api/user/logout", name="app_logout", methods={"GET"})
      */
     public function logout()
     {

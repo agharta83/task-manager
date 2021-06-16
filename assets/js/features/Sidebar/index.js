@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-
+import React, {useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
+import {logoutUser} from "../Auth/authThunk";
+import {useHistory} from "react-router";
 //All the svg files
 import logo from "../../img/logo.svg";
 import Home from "../../img/home-solid.svg";
@@ -12,13 +13,21 @@ import PowerOff from "../../img/power-off-solid.svg";
 
 // StyledComponent
 import {Container, SidebarContainer, Button, Logo, SlickBar, Item, Text, Profile, Details, Name, Logout} from "../../StyledComponents/Sidebar";
+import apiAuth from "../../helpers/apiAuth";
+
 
 const Sidebar = () => {
     const [click, setClick] = useState(false);
+    const dispatch = useDispatch();
+    const history = useHistory();
     const handleClick = () => setClick(!click);
 
     const [profileClick, setProfileClick] = useState(false);
     const handleProfileClick = () => setProfileClick(!profileClick);
+
+    const handleClickLogout = () => {
+        logoutUser();
+    }
 
     return (
         <Container>
@@ -86,7 +95,7 @@ const Sidebar = () => {
                         </Name>
 
                         <Logout>
-                            <img src={PowerOff} alt="logout" />
+                            <img src={PowerOff} alt="logout" onClick={handleClickLogout}/>
                         </Logout>
                     </Details>
                 </Profile>

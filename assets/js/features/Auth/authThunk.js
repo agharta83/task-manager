@@ -1,5 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import apiAuth from "../../helpers/apiAuth";
+import {useHistory} from "react-router";
 
 
 export const registerUser = createAsyncThunk(
@@ -88,3 +89,14 @@ export const resetPassword = createAsyncThunk(
         }
     }
 )
+
+export const logoutUser = () => {
+    apiAuth().get('logout')
+        .then((response) => {
+            localStorage.removeItem(('isLogged'));
+            history.push('/auth');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}

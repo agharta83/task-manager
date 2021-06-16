@@ -22,7 +22,6 @@ function getEmailVerify() {
 
 function App() {
     const isAuth = localStorage.getItem('isLogged');
-    console.log(isAuth);
 
     if (getEmailVerify()) {
         toast.success('L\'adresse email a été vérifiée.');
@@ -31,10 +30,7 @@ function App() {
     return (
         <Router>
             <Switch>
-                {isAuth ? <PrivateRoute path="/home" component={Home} /> : <Redirect from="/" to="/auth" /> }
-
-                <Route exact path="/auth" component={Auth} />
-                <Route exact path="/user/reset-password" component={ResetPasswordForm} />
+                {isAuth ? <PrivateRoute path="/home" component={Home} /> :  <Route exact path="/auth" component={Auth} />}
 
                 <PrivateRoute path="/home" component={Home} />
                 <PrivateRoute path="/team" component={Team} />
@@ -42,6 +38,9 @@ function App() {
                 <PrivateRoute path="/documents" component={Documents} />
                 <PrivateRoute path="/projects" component={Projects} />
                 <PrivateRoute path="/taskslist" component={TasksList} />
+                <Route exact path="/auth" component={Auth} />
+                <Route exact path="/user/reset-password" component={ResetPasswordForm} />
+                <Redirect to="/auth" />
             </Switch>
         </Router>
     );
