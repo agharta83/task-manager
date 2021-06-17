@@ -18,7 +18,6 @@ import apiAuth from "../../helpers/apiAuth";
 
 const Sidebar = () => {
     const [click, setClick] = useState(false);
-    const dispatch = useDispatch();
     const history = useHistory();
     const handleClick = () => setClick(!click);
 
@@ -27,6 +26,7 @@ const Sidebar = () => {
 
     const handleClickLogout = () => {
         logoutUser();
+        history.push('/auth');
     }
 
     return (

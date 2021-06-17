@@ -35,7 +35,7 @@ export const loginUser = createAsyncThunk(
             let data = await response.data;
 
             if (response.status === 200) {
-                localStorage.setItem('isLogged', data.isLogged);
+                localStorage.setItem('token', data.token);
                 return data;
             } else {
                 return thunkAPI.rejectWithValue(data);
@@ -93,8 +93,7 @@ export const resetPassword = createAsyncThunk(
 export const logoutUser = () => {
     apiAuth().get('logout')
         .then((response) => {
-            localStorage.removeItem(('isLogged'));
-            history.push('/auth');
+            localStorage.removeItem(('token'));
         })
         .catch((error) => {
             console.log(error);

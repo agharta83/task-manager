@@ -5,10 +5,15 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Security\LoginAuthenticator;
+use App\Service\ApiToken;
+use App\Service\SessionManager;
+use ContainerHCL0xfD\getDoctrine_DatabaseDropCommandService;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
@@ -51,9 +56,13 @@ class SecurityController extends BaseController
     public function loginUser(Request $request)
     {
         $user = $this->getUser();
+        $token = new ApiToken($user);
+
+        $sessionManager = new SessionManager(new Session());
+        $sessionManager->storeInSession('apitoken', $token);
 
         $data = [
-            'isLogged' => true,
+            'token' => $token->getToken(),
         ];
 
         return $this->createApiResponse($data, 200);

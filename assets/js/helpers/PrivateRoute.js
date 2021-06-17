@@ -20,7 +20,7 @@ const Pages = styled.div`
 `;
 
 export function PrivateRoute({component: Component, ...rest}) {
-    const isAuth = localStorage.getItem('isLogged');
+    const isAuth = localStorage.getItem('token');
 
     return (
         <Route

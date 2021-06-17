@@ -29,7 +29,6 @@ export default function Auth() {
     const [valueForReset, setValueForReset] = useState('forgotPassword');
     const { forgotPassword } = useSelector(authSelector);
 
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
