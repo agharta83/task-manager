@@ -6,11 +6,6 @@ export const Container = styled.div`
 
   .active {
     border-right: 4px solid #C05749;
-
-    img {
-      filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg)
-        brightness(103%) contrast(103%);
-    }
   }
 `;
 
@@ -106,18 +101,7 @@ export const Item = styled(NavLink)`
 
   &:hover {
     border-right: 4px solid #c05749;
-
-    img {
-      filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(93deg)
-        brightness(103%) contrast(103%);
-    }
-  }
-
-  img {
-    width: 1.2rem;
-    height: auto;
-    filter: invert(89%) sepia(33%) saturate(764%) hue-rotate(302deg) brightness(101%) contrast(101%);
-  }
+    color: #FFC3AE;
 `;
 
 export const Text = styled.span`

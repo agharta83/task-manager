@@ -2,18 +2,47 @@ import React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import {logoutUser} from "../Auth/authThunk";
 import {useHistory} from "react-router";
-//All the svg files
+// //All the svg files
 import logo from "../../img/logo.svg";
-import Home from "../../img/home-solid.svg";
-import Team from "../../img/social.svg";
-import Calender from "../../img/sceduled.svg";
-import Projects from "../../img/starred.svg";
-import Documents from "../../img/draft.svg";
+// import Home from "../../img/home-solid.svg";
+// import Team from "../../img/social.svg";
+// import Calender from "../../img/sceduled.svg";
+// import Projects from "../../img/starred.svg";
+// import Documents from "../../img/draft.svg";
 import PowerOff from "../../img/power-off-solid.svg";
 
 // StyledComponent
 import {Container, SidebarContainer, Button, Logo, SlickBar, Item, Text, Profile, Details, Name, Logout} from "../../StyledComponents/Sidebar";
-import apiAuth from "../../helpers/apiAuth";
+import {AccountTree, CalendarToday, Description, Group, Home} from "@material-ui/icons";
+
+const tabsItem = [
+    {
+        title: 'Home',
+        link: '/home',
+        icon: <Home />,
+    },
+    {
+        title: 'Team',
+        link: '/team',
+        icon: <Group />,
+    },
+    {
+        title: 'Calender',
+        link: '/calender',
+        icon: <CalendarToday />,
+    },
+    {
+        title: 'Documents',
+        link: '/documents',
+        icon: <Description />,
+    },
+    {
+        title: 'Projects',
+        link: '/projects',
+        icon: <AccountTree />,
+    },
+
+]
 
 
 const Sidebar = () => {
@@ -39,47 +68,59 @@ const Sidebar = () => {
                     <img src={logo} alt="logo" />
                 </Logo>
                 <SlickBar clicked={click}>
-                    <Item
+                    {tabsItem.map((tabItem, index) => (
+                        <Item
                         onClick={() => setClick(false)}
                         exact
                         activeClassName="active"
-                        to="/home"
+                        to={tabItem.link}
+                        key={index}
                     >
-                        <img src={Home} alt="Home" />
-                        <Text clicked={click}>Home</Text>
+                            {tabItem.icon}
+                        <Text clicked={click}>{tabItem.title}</Text>
                     </Item>
-                    <Item
-                        onClick={() => setClick(false)}
-                        activeClassName="active"
-                        to="/team"
-                    >
-                        <img src={Team} alt="Team" />
-                        <Text clicked={click}>Team</Text>
-                    </Item>
-                    <Item
-                        onClick={() => setClick(false)}
-                        activeClassName="active"
-                        to="/calender"
-                    >
-                        <img src={Calender} alt="Calender" />
-                        <Text clicked={click}>Calender</Text>
-                    </Item>
-                    <Item
-                        onClick={() => setClick(false)}
-                        activeClassName="active"
-                        to="/documents"
-                    >
-                        <img src={Documents} alt="Documents" />
-                        <Text clicked={click}>Documents</Text>
-                    </Item>
-                    <Item
-                        onClick={() => setClick(false)}
-                        activeClassName="active"
-                        to="/projects"
-                    >
-                        <img src={Projects} alt="Projects" />
-                        <Text clicked={click}>Projects</Text>
-                    </Item>
+                    ))}
+                    {/*<Item*/}
+                    {/*    onClick={() => setClick(false)}*/}
+                    {/*    exact*/}
+                    {/*    activeClassName="active"*/}
+                    {/*    to="/home"*/}
+                    {/*>*/}
+                    {/*    <img src={Home} alt="Home" />*/}
+                    {/*    <Text clicked={click}>Home</Text>*/}
+                    {/*</Item>*/}
+                    {/*<Item*/}
+                    {/*    onClick={() => setClick(false)}*/}
+                    {/*    activeClassName="active"*/}
+                    {/*    to="/team"*/}
+                    {/*>*/}
+                    {/*    <img src={Team} alt="Team" />*/}
+                    {/*    <Text clicked={click}>Team</Text>*/}
+                    {/*</Item>*/}
+                    {/*<Item*/}
+                    {/*    onClick={() => setClick(false)}*/}
+                    {/*    activeClassName="active"*/}
+                    {/*    to="/calender"*/}
+                    {/*>*/}
+                    {/*    <img src={Calender} alt="Calender" />*/}
+                    {/*    <Text clicked={click}>Calender</Text>*/}
+                    {/*</Item>*/}
+                    {/*<Item*/}
+                    {/*    onClick={() => setClick(false)}*/}
+                    {/*    activeClassName="active"*/}
+                    {/*    to="/documents"*/}
+                    {/*>*/}
+                    {/*    <img src={Documents} alt="Documents" />*/}
+                    {/*    <Text clicked={click}>Documents</Text>*/}
+                    {/*</Item>*/}
+                    {/*<Item*/}
+                    {/*    onClick={() => setClick(false)}*/}
+                    {/*    activeClassName="active"*/}
+                    {/*    to="/projects"*/}
+                    {/*>*/}
+                    {/*    <img src={Projects} alt="Projects" />*/}
+                    {/*    <Text clicked={click}>Projects</Text>*/}
+                    {/*</Item>*/}
                 </SlickBar>
 
                 <Profile clicked={profileClick}>
