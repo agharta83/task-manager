@@ -11,6 +11,7 @@ import Team from "./features/Team";
 import Calender from "./features/Calender";
 import Documents from "./features/Documents";
 import Projects from "./features/Projects";
+import Profile from "./features/Profile";
 
 function getEmailVerify() {
     let url = new URL(window.location.href);
@@ -33,6 +34,7 @@ function App() {
                 {isAuth ? <PrivateRoute path="/home" component={Home} /> :  <Route exact path="/auth" component={Auth} />}
 
                 <PrivateRoute path="/home" component={Home} />
+                <PrivateRoute path="/profile" component={Profile} />
                 <PrivateRoute path="/team" component={Team} />
                 <PrivateRoute path="/calender" component={Calender} />
                 <PrivateRoute path="/documents" component={Documents} />
