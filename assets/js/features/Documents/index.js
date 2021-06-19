@@ -1,10 +1,10 @@
 import React from "react";
-import MotionHoc from "../HOC/MotionHoc";
+import SideBarMotionHoc from "../HOC/SideBarMotionHoc";
 
 const DocumentsComponent = () => {
     return <h1>Documents</h1>;
 };
 
-const Documents = MotionHoc(DocumentsComponent);
+const Documents = SideBarMotionHoc(DocumentsComponent);
 
 export default Documents;

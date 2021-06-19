@@ -1,10 +1,10 @@
 import React from "react";
-import MotionHoc from "../HOC/MotionHoc";
+import SideBarMotionHoc from "../HOC/SideBarMotionHoc";
 
 const HomeComponent = () => {
     return <h1>Home</h1>;
 };
 
-const Home = MotionHoc(HomeComponent);
+const Home = SideBarMotionHoc(HomeComponent);
 
 export default Home;

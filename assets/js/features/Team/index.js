@@ -1,11 +1,11 @@
 import React from "react";
-import MotionHoc from "../HOC/MotionHoc";
+import SideBarMotionHoc from "../HOC/SideBarMotionHoc";
 
 
 const TeamComponent = () => {
     return <h1>Team</h1>;
 };
 
-const Team = MotionHoc(TeamComponent);
+const Team = SideBarMotionHoc(TeamComponent);
 
 export default Team;

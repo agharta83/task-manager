@@ -12,6 +12,11 @@ import Calender from "./features/Calender";
 import Documents from "./features/Documents";
 import Projects from "./features/Projects";
 import Profile from "./features/Profile";
+import Personal from "./features/Profile/Personal";
+import Payment from "./features/Profile/Payment";
+import Subscription from "./features/Profile/Subscription";
+import Privacy from "./features/Profile/Privacy";
+import Settings from "./features/Profile/Settings";
 
 function getEmailVerify() {
     let url = new URL(window.location.href);
@@ -40,6 +45,7 @@ function App() {
                 <PrivateRoute path="/documents" component={Documents} />
                 <PrivateRoute path="/projects" component={Projects} />
                 <PrivateRoute path="/taskslist" component={TasksList} />
+
                 <Route exact path="/auth" component={Auth} />
                 <Route exact path="/user/reset-password" component={ResetPasswordForm} />
                 <Redirect to="/auth" />

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 
-const MotionHoc = (Component) => {
+const SideBarMotionHoc = (Component) => {
     return function HOC() {
         return (
             <motion.div
@@ -23,4 +23,4 @@ const MotionHoc = (Component) => {
     };
 };
 
-export default MotionHoc;
+export default SideBarMotionHoc;

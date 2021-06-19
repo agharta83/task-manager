@@ -1,10 +1,10 @@
 import React from "react";
-import MotionHoc from "../HOC/MotionHoc";
+import SideBarMotionHoc from "../HOC/SideBarMotionHoc";
 
 const ProjectsComponent = () => {
     return <h1>Projects</h1>;
 };
 
-const Projects = MotionHoc(ProjectsComponent);
+const Projects = SideBarMotionHoc(ProjectsComponent);
 
 export default Projects;

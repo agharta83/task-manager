@@ -1,15 +1,47 @@
 import React, {useState} from "react";
-import MotionHoc from "../HOC/MotionHoc";
-import {Favorite, Payment, Person, Settings, Subscriptions} from '@material-ui/icons';
-import {
-    Container,
-    Content,
-    Item,
-    TabContainer,
-    TabContent,
-    TitleContainer,
-    TitleContent
-} from "../../StyledComponents/Profile";
+import {Favorite, Payment as PaymentIcon, Person, Settings as SettingsIcon, Subscriptions} from '@material-ui/icons';
+import {Container, Content, Item, TabContainer, TabContent, TitleContainer} from "../../Theme/StyledComponents/Profile";
+import ProfileSettingBarHoc from "../HOC/ProfileSettingBarHoc";
+import Personal from "./Personal";
+import Subscription from "./Subscription";
+import Privacy from "./Privacy";
+import Payment from "./Payment";
+import Settings from "./Settings";
+import {Route, Switch, Redirect} from "react-router";
+import {HashRouter} from "react-router-dom";
+
+const tabsItem = [
+    {
+        link: 'personal',
+        icon: <Person/>,
+        id: 'personal',
+        content: <Personal/>,
+    },
+    {
+        link: 'payment',
+        icon: <PaymentIcon/>,
+        id: 'payment',
+        content: <Payment/>,
+    },
+    {
+        link: 'subscription',
+        icon: <Subscriptions/>,
+        id: 'subscriptions',
+        content: <Subscription/>,
+    },
+    {
+        link: 'privacy',
+        icon: <Favorite/>,
+        id: 'privacy',
+        content: <Privacy/>,
+    },
+    {
+        link: 'settings',
+        icon: <SettingsIcon/>,
+        id: 'settings',
+        content: <Settings/>,
+    },
+];
 
 const ProfileComponent = () => {
     const [click, setClick] = useState(false);
@@ -17,73 +49,43 @@ const ProfileComponent = () => {
     return (
         <Container>
             <TitleContainer>profile setting</TitleContainer>
-            <TabContainer>
-                <Item
-                    onClick={() => setClick(false)}
-                    exact
-                    activeClassName="active"
-                    to="/personal"
-                >
-                    <Person />
-                </Item>
-                <Item
-                    onClick={() => setClick(false)}
-                    exact
-                    activeClassName="active"
-                    to="/payment"
-                >
-                    <Payment />
-                </Item>
-                <Item
-                    onClick={() => setClick(false)}
-                    exact
-                    activeClassName="active"
-                    to="/subscription"
-                >
-                    <Subscriptions />
-                </Item>
-                <Item
-                    onClick={() => setClick(false)}
-                    exact
-                    activeClassName="active"
-                    to="/privacy"
-                >
-                    <Favorite />
-                </Item>
-                <Item
-                    onClick={() => setClick(false)}
-                    exact
-                    activeClassName="active"
-                    to="/settings"
-                >
-                    <Settings />
-                </Item>
-            </TabContainer>
+            <HashRouter>
+                <TabContainer role="tablist">
+                    {tabsItem.map((tabItem, index) => (
+                        <Item
+                            onClick={() => setClick(false)}
+                            to={tabItem.link}
+                            key={index}
+                        >
+                            {tabItem.icon}
+                        </Item>
+                    ))}
+                </TabContainer>
+            </HashRouter>
+
             <TabContent>
-                <Content>
-                    <TitleContent>Personal Info</TitleContent>
-                </Content>
+                <Switch>
+                    {tabsItem.map(tabItem => (
+                        <Route key={tabItem.id} path={`/${tabItem.link}`}>
+                            {tabItem.content}
+                        </Route>
+                    ))}
+                    {/*<Route render={() => <Redirect to={tabsItem[0] ? tabsItem[0].link : "/profile"} />} />*/}
+                </Switch>
+                {/*{tabsItem.map((tabItem, index) => (*/}
+                {/*    <Content*/}
+                {/*        id={tabItem.id}*/}
+                {/*        key={index}*/}
 
-                <Content>
-                    <TitleContent>Payment Info</TitleContent>
-                </Content>
-
-                <Content>
-                    <TitleContent>Your Subscription</TitleContent>
-                </Content>
-
-                <Content>
-                    <TitleContent>Privacy Settings</TitleContent>
-                </Content>
-
-                <Content>
-                    <TitleContent>Account Settings</TitleContent>
-                </Content>
+                {/*    >*/}
+                {/*        {tabItem.content}*/}
+                {/*    </Content>*/}
+                {/*))}*/}
             </TabContent>
         </Container>
     )
 };
 
-const Profile = MotionHoc(ProfileComponent);
+const Profile = ProfileSettingBarHoc(ProfileComponent);
 
 export default Profile;
