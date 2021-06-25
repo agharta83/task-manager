@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {Link, NavLink} from "react-router-dom";
 
 export const Container = styled.div`
-  background: #09090c;
+  background: #ffffff;
   width: 800px;
   height: 500px;
   margin: 0 auto;
@@ -40,6 +40,7 @@ export const Item = styled(Link)`
   font-size: 1.1em;
   display: block;
   transition: all .3s ease-in-out;
+  text-align: center;
   
   &:hover {
   color: #FFC3AE;
@@ -62,6 +63,7 @@ export const Content = styled.div`
   transition: opacity .5s ease-in;
   position: absolute;
   width: 70%;
+  margin-left: 25px;
 `;
 
 export const TitleContent = styled.p`
@@ -69,4 +71,5 @@ export const TitleContent = styled.p`
   font-size: 1em;
   margin-top: 40px;
   margin-bottom: 35px;
+  margin-left: 15px;
 `;

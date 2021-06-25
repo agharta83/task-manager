@@ -1,10 +1,15 @@
 import React from "react";
 import ProfileSettingBarHoc from "../../HOC/ProfileSettingBarHoc";
-import {TitleContent} from "../../../Theme/StyledComponents/Profile";
+import {Content, TabContent, TitleContent} from "../../../Theme/StyledComponents/Profile";
 
 const PaymentComponent = () => {
     return (
-        <TitleContent>Payment</TitleContent>
+        <TabContent>
+            <Content>
+                <TitleContent>Payment</TitleContent>
+            </Content>
+        </TabContent>
+
     );
 };
 

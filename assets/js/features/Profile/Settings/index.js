@@ -1,11 +1,13 @@
 import React from "react";
 import ProfileSettingBarHoc from "../../HOC/ProfileSettingBarHoc";
-import {TabContent, TitleContent} from "../../../Theme/StyledComponents/Profile";
+import {Content, TabContent, TitleContent} from "../../../Theme/StyledComponents/Profile";
 
 const SettingsComponent = () => {
     return (
         <TabContent>
-            <TitleContent>Settings</TitleContent>
+            <Content>
+                <TitleContent>Settings</TitleContent>
+            </Content>
         </TabContent>
     );
 };
