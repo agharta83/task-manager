@@ -1,17 +1,21 @@
 import React, {useState} from "react";
 import ProfileSettingBarHoc from "../../HOC/ProfileSettingBarHoc";
 import {Content, TabContent, TitleContent} from "../../../Theme/StyledComponents/Profile";
-import {FormControl, Grid, Input, InputAdornment, InputLabel, makeStyles, TextField} from "@material-ui/core";
+import {FormControl, Grid, makeStyles, TextField, Button} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
         margin: theme.spacing(1),
     },
     textField: {
-        width: '85%',
+        width: '100%',
     },
-    marginBottom: {
-        marginBottom: '15px',
+    button: {
+        position: 'relative',
+        top: '-40px',
+        right: '-475px',
+        fontSize: '0.8em',
+        padding: '0px 9px',
     }
 }));
 
@@ -36,29 +40,39 @@ const PersonalComponent = () => {
 
                 <FormControl fullWidth className={classes.margin}>
                     <Grid container spacing={1} direction="column">
-                        <Grid item className={classes.marginBottom}>
+                        <Grid item>
                             <TextField
                                 label="FULL NAME"
                                 defaultValue="Hello World"
                                 className={classes.textField}
                                 InputProps={InputProps}
                             />
+                            <Button variant="outlined" size="small" color="primary" className={classes.button}>
+                                UPDATE
+                            </Button>
                         </Grid>
-                        <Grid item className={classes.marginBottom}>
+                        <Grid item>
                             <TextField
                                 label="EMAIL"
                                 defaultValue="Hello World"
                                 className={classes.textField}
                                 InputProps={InputProps}
                             />
+                            <Button variant="outlined" size="small" color="primary" className={classes.button}>
+                                UPDATE
+                            </Button>
                         </Grid>
-                        <Grid item className={classes.marginBottom}>
+                        <Grid item>
                             <TextField
                                 label="PASSWORD"
+                                type='password'
                                 defaultValue="Hello World"
                                 className={classes.textField}
                                 InputProps={InputProps}
                             />
+                            <Button variant="outlined" size="small" color="primary" className={classes.button}>
+                                UPDATE
+                            </Button>
                         </Grid>
                     </Grid>
 
