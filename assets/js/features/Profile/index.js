@@ -16,30 +16,35 @@ const tabsItem = [
         icon: <Person/>,
         id: 'personal',
         content: <Personal/>,
+        activeClassName: 'activeLink'
     },
     {
         link: '/payment',
         icon: <PaymentIcon/>,
         id: 'payment',
         content: <Payment/>,
+        activeClassName: 'activeLink'
     },
     {
         link: '/subscription',
         icon: <Subscriptions/>,
         id: 'subscriptions',
         content: <Subscription/>,
+        activeClassName: 'activeLink'
     },
     {
         link: '/privacy',
         icon: <Favorite/>,
         id: 'privacy',
         content: <Privacy/>,
+        activeClassName: 'activeLink'
     },
     {
         link: '/settings',
         icon: <SettingsIcon/>,
         id: 'settings',
         content: <Settings/>,
+        activeClassName: 'activeLink'
     },
 ];
 
@@ -56,6 +61,7 @@ const ProfileComponent = () => {
                             onClick={() => setClick(false)}
                             to={tabItem.link}
                             key={index}
+                            activeClassName={tabItem.activeClassName}
                         >
                             {tabItem.icon}
                         </Item>

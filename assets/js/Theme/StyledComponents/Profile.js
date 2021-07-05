@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {Link, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 export const Container = styled.div`
   background: #ffffff;
@@ -33,7 +33,7 @@ export const TabContainer = styled.div`
   box-shadow: 3px 3px 10px rgba(119, 119, 119 , .5);
 `;
 
-export const Item = styled(Link)`
+export const Item = styled(NavLink)`
   list-style: none;
   padding: 35px;
   color: #FFFFFF;
@@ -50,6 +50,11 @@ export const Item = styled(Link)`
   
   &:first-child {
   margin-top: 7px;
+  }
+  
+  &.activeLink {
+  color: #FFC3AE;
+  transform: scale(1.2);
   }
 `;
 
