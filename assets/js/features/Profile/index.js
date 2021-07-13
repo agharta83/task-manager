@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Favorite, Payment as PaymentIcon, Person, Settings as SettingsIcon, Subscriptions} from '@material-ui/icons';
 import {Container, Item, TabContainer, TitleContainer} from "../../Theme/StyledComponents/Profile";
 import ProfileSettingBarHoc from "../HOC/ProfileSettingBarHoc";
@@ -9,6 +9,8 @@ import Payment from "./Payment";
 import Settings from "./Settings";
 import {Redirect, Route, Switch} from "react-router";
 import {HashRouter} from "react-router-dom";
+import {getPersonalInfo} from "./profileThunk";
+import {useDispatch} from "react-redux";
 
 const tabsItem = [
     {
@@ -50,6 +52,11 @@ const tabsItem = [
 
 const ProfileComponent = () => {
     const [click, setClick] = useState(false);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPersonalInfo())
+    }, []);
 
     return (
         <Container>

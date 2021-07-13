@@ -8,6 +8,7 @@ import PowerOff from "../../img/power-off-solid.svg";
 // StyledComponent
 import {Container, SidebarContainer, Button, Logo, SlickBar, Item, Text, Profile, Details, Name, Logout} from "../../Theme/StyledComponents/Sidebar";
 import {AccountTree, CalendarToday, Description, Group, Home} from "@material-ui/icons";
+import {useDispatch} from "react-redux";
 
 const tabsItem = [
     {
@@ -40,11 +41,12 @@ const tabsItem = [
 
 const Sidebar = () => {
     const [click, setClick] = useState(false);
-    const history = useHistory();
-    const handleClick = () => setClick(!click);
-
     const [profileClick, setProfileClick] = useState(false);
-    const handleProfileClick = () => setProfileClick(!profileClick);
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    const handleClick = () => setClick(!click);
+    const handleProfileClick = () => setProfileClick(!profileClick)
 
     const handleClickLogout = () => {
         logoutUser();
@@ -77,7 +79,7 @@ const Sidebar = () => {
 
                 <Profile clicked={profileClick}>
                     <img
-                        onClick={() => handleProfileClick()}
+                        onClick={handleProfileClick}
                         src="https://picsum.photos/200"
                         alt="Profile"
                     />

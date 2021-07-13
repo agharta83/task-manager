@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {loginUser, logoutUser, registerUser, resetPassword, sendMailForgotPassword} from "./authThunk";
+import {loginUser, registerUser, resetPassword, sendMailForgotPassword} from "./authThunk";
 
 export const authSlice = createSlice({
     name: 'auth',

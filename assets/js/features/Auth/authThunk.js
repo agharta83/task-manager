@@ -1,6 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import apiAuth from "../../helpers/apiAuth";
-import {useHistory} from "react-router";
+import {apiAuth} from "../../helpers/apiCall";
 
 
 export const registerUser = createAsyncThunk(

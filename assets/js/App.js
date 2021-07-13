@@ -36,7 +36,7 @@ function App() {
     return (
         <Router>
             <Switch>
-                {isAuth ? <PrivateRoute path="/home" component={Home} /> :  <Route exact path="/auth" component={Auth} />}
+                {isAuth ? <PrivateRoute path="/home" component={Home} /> : <Route exact path="/auth" component={Auth} />}
 
                 <PrivateRoute path="/home" component={Home} />
                 <PrivateRoute path="/profile" component={Profile} />

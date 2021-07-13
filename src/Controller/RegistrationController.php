@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\RegisterValidation;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use App\Security\LoginAuthenticator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -24,6 +22,7 @@ class RegistrationController extends BaseController
 
     public function __construct(EmailVerifier $emailVerifier)
     {
+        parent::__construct();
         $this->emailVerifier = $emailVerifier;
     }
 

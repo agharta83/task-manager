@@ -4,12 +4,26 @@
 namespace App\Controller;
 
 
+use App\Service\SessionManager;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class BaseController extends AbstractController
 {
+    protected $sessionManager;
+
+    /**
+     * BaseController constructor.
+     * @param SessionManager $sessionManager
+     */
+    public function __construct(SessionManager $sessionManager)
+    {
+        $this->sessionManager = $sessionManager;
+    }
+
     /**
      * @param $data // Usually on object you want to serialize
      * @param int $statusCode
@@ -36,5 +50,14 @@ class BaseController extends AbstractController
         }
 
         return $errors;
+    }
+
+    /**
+     * @param string $clientToken
+     * @return bool
+     */
+    protected function checkToken(string $clientToken): bool
+    {
+        return $this->sessionManager->checkKeyValueInSession('apitoken', $clientToken);
     }
 }

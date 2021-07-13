@@ -45,6 +45,7 @@ class SecurityController extends BaseController
      */
     public function logout()
     {
+        // TODO Destroy session
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
@@ -58,8 +59,7 @@ class SecurityController extends BaseController
         $user = $this->getUser();
         $token = new ApiToken($user);
 
-        $sessionManager = new SessionManager(new Session());
-        $sessionManager->storeInSession('apitoken', $token);
+        $this->sessionManager->storeInSession('apitoken', $token->getToken());
 
         $data = [
             'token' => $token->getToken(),

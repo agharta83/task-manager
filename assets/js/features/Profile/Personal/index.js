@@ -1,29 +1,34 @@
-import React, {useCallback, useState} from "react";
+import React, {useEffect, useState} from "react";
 import ProfileSettingBarHoc from "../../HOC/ProfileSettingBarHoc";
 import {Content, TabContent, TitleContent} from "../../../Theme/StyledComponents/Profile";
 import {FormControl, Grid, makeStyles} from "@material-ui/core";
 import InputBox from "../../../Reusable/InputBox";
+import {useSelector} from "react-redux";
+import {personalInfosSelector} from "../ProfileSlice";
+import {isEmptyObject} from "../../../helpers/utils";
+import InputSwitch from "../../../Reusable/Switch";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
         margin: theme.spacing(1),
     },
-    // textField: {
-    //     width: '100%',
-    // },
-    // button: {
-    //     position: 'relative',
-    //     top: '-40px',
-    //     right: '-475px',
-    //     fontSize: '0.8em',
-    //     padding: '0px 9px',
-    // }
 }));
 
 const fields = [
     {
-        name: "fullName",
-        label: "FULL NAME",
+        name: "userName",
+        label: "USER NAME",
+        type: "text",
+    },
+    {
+        name: "firstName",
+        label: "FIRST NAME",
+        type: "text",
+    },
+    {
+        name: "lastName",
+        label: "LAST NAME",
+        type: "text",
     },
     {
         name: "email",
@@ -34,20 +39,29 @@ const fields = [
         name: "password",
         label: "PASSWORD",
         type: "password",
-    }
+    },
+    {
+        name: "isActif",
+        label: "ACTIF",
+        type: "switch",
+    },
 ];
-
-const initialValues = {
-    fullName: "Hello World",
-    email: "Hello World",
-    password: "Hello World",
-}
 
 const PersonalComponent = () => {
     const classes = useStyles();
-    const [values, setValues] = useState(initialValues);
+    const personalInfos = useSelector(personalInfosSelector);
+    const [values, setValues] = useState(personalInfos);
+
+    useEffect(() => {
+        if (!isEmptyObject(personalInfos)) {
+            setValues(personalInfos);
+        }
+    }, [personalInfos]);
+
     const [readOnly, setReadOnly] = useState({
-        fullName: true,
+        userName: true,
+        firstName: true,
+        lastName: true,
         email: true,
         password: true,
     });
@@ -64,24 +78,42 @@ const PersonalComponent = () => {
         });
     };
 
+    const handleSwitchChange = (event) => {
+        const {name, checked} = event.target;
+        setValues({
+            ...values,
+            [name]: checked,
+        });
+    };
+
     return (
         <TabContent>
             <Content>
                 <TitleContent>Personal</TitleContent>
 
                 <FormControl fullWidth className={classes.margin}>
-                    <Grid container spacing={1} direction="column">
+                    <Grid container spacing={0} direction="column">
                         {fields.map((field, index) => (
-                            <InputBox
-                                key={index}
-                                name={field.name}
-                                label={field.label}
-                                value={values[field.name] || ''}
-                                type={field.type}
-                                readOnly={Boolean(readOnly[field.name])}
-                                handleReadOnly={handleReadOnly}
-                                onChange={handleInputChange}
-                            />
+                            field.type === "switch" && typeof values[field.name] == "boolean" ? (
+                                    <InputSwitch
+                                        key={index}
+                                        checked={values[field.name]}
+                                        onChange={handleSwitchChange}
+                                        name={field.name}
+                                        label={field.label}
+                                    />
+                                )
+                                :
+                                <InputBox
+                                    key={index}
+                                    name={field.name}
+                                    label={field.label}
+                                    value={values[field.name] || ''}
+                                    type={field.type}
+                                    readOnly={Boolean(readOnly[field.name])}
+                                    handleReadOnly={handleReadOnly}
+                                    onChange={handleInputChange}
+                                />
                         ))}
                     </Grid>
 
