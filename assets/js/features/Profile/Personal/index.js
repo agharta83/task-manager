@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ProfileSettingBarHoc from "../../HOC/ProfileSettingBarHoc";
 import {Content, TabContent, TitleContent} from "../../../Theme/StyledComponents/Profile";
 import {FormControl, Grid, makeStyles} from "@material-ui/core";
 import InputBox from "../../../Reusable/InputBox";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {personalInfosSelector} from "../ProfileSlice";
 import {isEmptyObject} from "../../../helpers/utils";
 import InputSwitch from "../../../Reusable/Switch";
+import {updatePersonalInfos} from "../profileThunk";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -51,12 +52,24 @@ const PersonalComponent = () => {
     const classes = useStyles();
     const personalInfos = useSelector(personalInfosSelector);
     const [values, setValues] = useState(personalInfos);
+    const valuesRef = useRef();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!isEmptyObject(personalInfos)) {
             setValues(personalInfos);
         }
     }, [personalInfos]);
+
+    useEffect(() => {
+        valuesRef.current = values;
+    }, [values]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(updatePersonalInfos(valuesRef.current));
+        }
+    }, []);
 
     const [readOnly, setReadOnly] = useState({
         userName: true,

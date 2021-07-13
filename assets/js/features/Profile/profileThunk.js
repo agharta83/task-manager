@@ -20,3 +20,24 @@ export const getPersonalInfo = createAsyncThunk(
         }
     }
 );
+
+export const updatePersonalInfos = createAsyncThunk(
+    'profile/personal/update',
+    async ({...values}, thunkAPI) => {
+        try {
+            const response = await apiProfile().post(
+                'personal/update',
+                JSON.stringify(values)
+            );
+            let data = await response.data;
+
+            if (response.status === 200) {
+                return data;
+            } else {
+                return thunkAPI.rejectWithValue(data);
+            }
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response.data);
+        }
+    }
+);

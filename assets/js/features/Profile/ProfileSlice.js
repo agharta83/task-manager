@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getPersonalInfo} from "./profileThunk";
+import {getPersonalInfo, updatePersonalInfos} from "./profileThunk";
 
 
 export const profileSlice = createSlice({
@@ -27,18 +27,24 @@ export const profileSlice = createSlice({
     reducers: {},
     extraReducers: {
         [getPersonalInfo.fulfilled]: (state, {payload}) => {
-            state.personalInfo.userName = payload.userName;
-            state.personalInfo.firstName = payload.firstName;
-            state.personalInfo.lastName = payload.lastName;
-            state.personalInfo.email = payload.email;
-            state.personalInfo.password = payload.password;
-            state.personalInfo.isActif = payload.isActif;
+            state.personalInfo = {...payload};
             state.global.isSuccess = true;
         },
         [getPersonalInfo.pending]: (state) => {
             state.global.isFetching = true;
         },
         [getPersonalInfo.rejected]: (state, {payload}) => {
+            state.global.isError = true;
+            state.global.errorMessage = payload;
+        },
+        [updatePersonalInfos.fulfilled]: (state, {payload}) => {
+            state.personalInfo = {...payload};
+            state.global.isSuccess = true;
+        },
+        [updatePersonalInfos.pending]: (state) => {
+            state.global.isFetching = true;
+        },
+        [updatePersonalInfos.rejected]: (state, {payload}) => {
             state.global.isError = true;
             state.global.errorMessage = payload;
         }
