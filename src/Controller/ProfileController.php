@@ -113,13 +113,9 @@ class ProfileController extends BaseController
             $user->setImagePath($userImgPath);
         }
 
-//        TODO Perte du current user !!!
-
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
-
-        // TODO Gerer le getUsername de l'user interface qui retourne l'email
 
         $data = [
             'userName' => $user->getUsername(),
