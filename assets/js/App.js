@@ -12,11 +12,6 @@ import Calender from "./features/Calender";
 import Documents from "./features/Documents";
 import Projects from "./features/Projects";
 import Profile from "./features/Profile";
-import Personal from "./features/Profile/Personal";
-import Payment from "./features/Profile/Payment";
-import Subscription from "./features/Profile/Subscription";
-import Privacy from "./features/Profile/Privacy";
-import Settings from "./features/Profile/Settings";
 
 function getEmailVerify() {
     let url = new URL(window.location.href);

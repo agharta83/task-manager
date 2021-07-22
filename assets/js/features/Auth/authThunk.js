@@ -34,13 +34,13 @@ export const loginUser = createAsyncThunk(
             let data = await response.data;
 
             if (response.status === 200) {
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('isLogged', data.isLogged);
                 return data;
             } else {
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (error) {
-            return thunkAPI.rejectWithValue(error.response.data.errors);
+            return thunkAPI.rejectWithValue(error.response.data.error);
         }
     }
 )
@@ -92,7 +92,7 @@ export const resetPassword = createAsyncThunk(
 export const logoutUser = () => {
     apiAuth().get('logout')
         .then((response) => {
-            localStorage.removeItem(('token'));
+            localStorage.removeItem('isLogged');
         })
         .catch((error) => {
             console.log(error);

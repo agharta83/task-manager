@@ -12,6 +12,7 @@ export const profileSlice = createSlice({
             email: '',
             password: '',
             isActif: '',
+            imagePath: '',
         },
         payment: {},
         subscription: {},

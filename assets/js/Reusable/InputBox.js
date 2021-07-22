@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     button: {
         position: 'relative',
         top: '-40px',
-        right: '-475px',
+        right: '-225px',
         fontSize: '0.8em',
         padding: '0px 9px',
     },

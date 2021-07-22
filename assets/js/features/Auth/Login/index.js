@@ -87,7 +87,7 @@ const LoginForm = ({value}) => {
             toast.error(errorMessage);
             dispatch(clearState());
         }
-    }, [isLoginSuccess, isError]);
+    }, [isLoginSuccess]);
 
     return (
         <TabPanel value={value} index="connexion">

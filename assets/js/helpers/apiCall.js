@@ -19,7 +19,6 @@ export const apiProfile = () => {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
-            'Bearer': `${token}`,
         },
         withCredentials: true,
     });

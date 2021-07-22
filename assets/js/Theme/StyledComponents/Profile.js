@@ -67,7 +67,7 @@ export const TabContent = styled.div`
 export const Content = styled.div`
   transition: opacity .5s ease-in;
   position: absolute;
-  width: 70%;
+  width: 75%;
   margin-left: 25px;
 `;
 

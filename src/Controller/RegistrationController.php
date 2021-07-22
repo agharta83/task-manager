@@ -22,7 +22,6 @@ class RegistrationController extends BaseController
 
     public function __construct(EmailVerifier $emailVerifier)
     {
-        parent::__construct();
         $this->emailVerifier = $emailVerifier;
     }
 
