@@ -5,16 +5,12 @@ namespace App\Controller;
 
 
 use App\Service\Base64FileExtractor;
-use App\Service\ImageManager;
 use App\Service\UploadedBase64File;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\File\File as FileObject;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class ProfileController
@@ -29,7 +25,7 @@ class ProfileController extends BaseController
      * @return Response
      * @throws \Exception
      */
-    public function getPersonalInfo(Request $request): Response
+    public function getPersonalInfo(): Response
     {
         $user = $this->getUser();
 
@@ -46,13 +42,12 @@ class ProfileController extends BaseController
         ];
 
         return $this->createApiResponse($data, 200);
-
-//        return $this->createApiResponse($data, 400);
     }
 
     /**
      * @Route("/api/profile/personal/update", name="app_profile_personal_update", methods={"POST"})
      * @param Request $request
+     * @param Base64FileExtractor $base64FileExtractor
      * @return Response
      * @throws \Exception
      */
@@ -79,38 +74,18 @@ class ProfileController extends BaseController
             }
         }
 
-        /** UPLOADS TEST */
+        /** UPLOADS */
         if ($datas->imagePath !== "") {
-            /** TODO A REFACTO */
-            if (preg_match('/^data:image\/(\w+);base64,/', $datas->imagePath, $type)) {
-                $data = substr($datas->imagePath, strpos($datas->imagePath, ',') + 1);
-                $type = strtolower($type[1]); // extension
-
-                if (!in_array($type, [ 'jpg', 'jpeg', 'gif', 'png' ])) {
-                    throw new \Exception('invalid image type');
-                }
-
-                $data = base64_decode($data);
-
-                if ($data === false) {
-                    throw new \Exception('base64_decode failed');
-                }
-            } else {
-                throw new \Exception('did not match data URI with image data');
+            /** Base64 Decode */
+            $base64FileExtractor = new Base64FileExtractor($datas->imagePath, 'image');
+            $dataImage = $base64FileExtractor->decodedBase64File();
+            /** Upload File */
+            if ($dataImage) {
+                $uploadedBase64File = new UploadedBase64File($user->getId(), $this->getParameter('kernel.project_dir'), $dataImage);
+                $userImgPath = $uploadedBase64File->saveFile();
+                /** Set user image */
+                if ($userImgPath) $user->setImagePath($userImgPath);
             }
-
-            // Verifier si le dossier existe
-            $userDirectory = $user->getId();
-            $pathDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/' . $userDirectory;
-            if (!file_exists($pathDirectory)) {
-                mkdir($pathDirectory, 0777, true);
-            }
-            $userFile = uniqid() . '.' . $type;
-            $tmpPath = $pathDirectory . '/' . $userFile;
-            file_put_contents($tmpPath, $data);
-
-            $userImgPath = $userDirectory . '/' . $userFile;
-            $user->setImagePath($userImgPath);
         }
 
         $entityManager = $this->getDoctrine()->getManager();

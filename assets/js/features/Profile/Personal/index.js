@@ -126,7 +126,6 @@ const PersonalComponent = () => {
             }
             onClose();
         }
-        setPreview(null);
         setDisplayPreview(!displayPreview);
     }
 
@@ -214,7 +213,7 @@ const PersonalComponent = () => {
                             </Button>
                         </Grid>
                         <Grid item className={classes.marginBottom}>
-                            <AvatarMUI alt="Audrey" src={preview || UPLOADS_PATH + values.imagePath} className={classes.large}>AC</AvatarMUI>
+                            <AvatarMUI alt="Audrey" src={preview || UPLOADS_PATH + values.imagePath} className={classes.large} />
                         </Grid>
                         {renderPreviewBlock()}
                     </Grid>
