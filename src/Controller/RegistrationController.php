@@ -6,10 +6,12 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\LoginAuthenticator;
+use DateTime;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -18,10 +20,12 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends BaseController
 {
-    private $emailVerifier;
+    /** @var EmailVerifier  */
+    private EmailVerifier $emailVerifier;
 
     public function __construct(EmailVerifier $emailVerifier)
     {
+        parent::__construct();
         $this->emailVerifier = $emailVerifier;
     }
 
@@ -32,6 +36,7 @@ class RegistrationController extends BaseController
      * @param GuardAuthenticatorHandler $guardHandler
      * @param LoginAuthenticator $authenticator
      * @return Response
+     * @throws TransportExceptionInterface
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginAuthenticator $authenticator): Response
     {
@@ -65,12 +70,11 @@ class RegistrationController extends BaseController
         );
 
         $user->setPseudo($user->generateRandomUsername());
-        $user->setDateCreate(new \DateTime('now'));
+        $user->setDateCreate(new DateTime('now'));
         $user->setIsActif(true);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         // generate a signed url and email it to the user
         $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,

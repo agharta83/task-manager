@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Service\Base64FileExtractor;
 use App\Service\UploadedBase64File;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,16 +20,22 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProfileController extends BaseController
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * @Route("/api/profile/personal", name="app_profile_personal", methods={"GET"})
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPersonalInfo(): Response
     {
         $user = $this->getUser();
 
-        $password = random_int(100000, 1000000);
+//        $password = random_int(100000, 1000000);
 
         $data = [
             'userName' => $user->getPseudo(),
@@ -46,9 +53,8 @@ class ProfileController extends BaseController
     /**
      * @Route("/api/profile/personal/update", name="app_profile_personal_update", methods={"POST"})
      * @param Request $request
-     * @param Base64FileExtractor $base64FileExtractor
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function updatePersonalInfo(Request $request): Response
     {
@@ -60,7 +66,7 @@ class ProfileController extends BaseController
 
         $user = $this->getUser();
 
-        $result = [];
+//        $result = [];
 
         foreach ($datas as $key => $value) {
             $methodName = 'get' . ucfirst($key);
@@ -68,7 +74,7 @@ class ProfileController extends BaseController
                 if ($user->{$methodName}() !== $value) {
                     $setMethodName = 'set' . ucfirst($key);
                     $user->{$setMethodName}($value);
-                    $result[] = "Champs " . $key . " de l'entité User mis à jour";
+//                    $result[] = "Champs " . $key . " de l'entité User mis à jour"; // TODO @Logger
                 }
             }
         }
@@ -87,9 +93,8 @@ class ProfileController extends BaseController
             }
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         $data = [
             'userName' => $user->getPseudo(),

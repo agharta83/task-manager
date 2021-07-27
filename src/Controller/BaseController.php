@@ -4,12 +4,20 @@
 namespace App\Controller;
 
 
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class BaseController extends AbstractController
 {
+    /** @var ObjectManager  */
+    protected ObjectManager $entityManager;
+
+    public function __construct()
+    {
+        $this->entityManager = $this->getDoctrine()->getManager();
+    }
 
     /**
      * @param $data // Usually on object you want to serialize

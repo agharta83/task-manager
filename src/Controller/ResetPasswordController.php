@@ -8,6 +8,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,10 +24,11 @@ class ResetPasswordController extends BaseController
 {
     use ResetPasswordControllerTrait;
 
-    private $resetPasswordHelper;
+    private ResetPasswordHelperInterface $resetPasswordHelper;
 
     public function __construct(ResetPasswordHelperInterface $resetPasswordHelper)
     {
+        parent::__construct();
         $this->resetPasswordHelper = $resetPasswordHelper;
     }
 
@@ -34,6 +36,10 @@ class ResetPasswordController extends BaseController
      * Display & process form to request a password reset.
      *
      * @Route("/forgot-password", name="app_forgot_password_request")
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @return Response
+     * @throws TransportExceptionInterface
      */
     public function request(Request $request, MailerInterface $mailer): Response
     {
@@ -93,6 +99,10 @@ class ResetPasswordController extends BaseController
      * Validates and process the reset URL that the user clicked in their email.
      *
      * @Route("/reset/{token}", name="app_reset_password")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param string|null $token
+     * @return Response
      */
     public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, string $token = null): Response
     {
@@ -192,7 +202,7 @@ class ResetPasswordController extends BaseController
         );
 
         $user->setPassword($encodedPassword);
-        $this->getDoctrine()->getManager()->flush();
+        $this->entityManager->flush();
 
         // The session is cleaned up after the password has been changed.
         $this->cleanSessionAfterReset();
@@ -206,7 +216,7 @@ class ResetPasswordController extends BaseController
      * @param string $emailFormData
      * @param MailerInterface $mailer
      * @return string[]
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer): array
     {

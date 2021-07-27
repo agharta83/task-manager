@@ -2,25 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Security\LoginAuthenticator;
-use App\Service\ApiToken;
-use App\Service\SessionManager;
-use ContainerHCL0xfD\getDoctrine_DatabaseDropCommandService;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends BaseController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * @Route("/login", name="app_login")
      * @param AuthenticationUtils $authenticationUtils
@@ -46,7 +42,7 @@ class SecurityController extends BaseController
      */
     public function logout()
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
     /**
@@ -72,7 +68,7 @@ class SecurityController extends BaseController
 
             $data['isLogged'] = true;
             $data['status'] = 200;
-        };
+        }
 
         return $this->createApiResponse($data, $data['status']);
 
