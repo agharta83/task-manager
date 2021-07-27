@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\Controller;
+namespace App\Controller\Setting;
 
 
+use App\Controller\BaseController;
 use App\Service\Base64FileExtractor;
 use App\Service\UploadedBase64File;
 use Exception;
