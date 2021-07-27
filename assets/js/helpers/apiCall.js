@@ -11,16 +11,18 @@ export const apiAuth = () => {
 };
 
 export const apiProfile = () => {
-    const token = localStorage.getItem('token') ?? '';
+    const isAuth = localStorage.getItem('isLogged');
 
-    return axios.create({
-        baseURL: API_PROFILE,
-        responseType: "json",
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json',
-        },
-        withCredentials: true,
-    });
+    if (isAuth) {
+        return axios.create({
+            baseURL: API_PROFILE,
+            responseType: "json",
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+    }
 };
 

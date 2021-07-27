@@ -64,7 +64,7 @@ class RegistrationController extends BaseController
             )
         );
 
-        $user->setUsername($user->generateRandomUsername());
+        $user->setPseudo($user->generateRandomUsername());
         $user->setDateCreate(new \DateTime('now'));
         $user->setIsActif(true);
 

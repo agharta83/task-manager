@@ -33,6 +33,43 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const validate = (name, value) => {
+    const errors = {};
+
+    switch (name) {
+        case 'userName':
+            if (value.length > 75) {
+                errors.userName = 'Username limited to 75 characters';
+            } else if (!value.match(/[^a-z0-9]/gi)) {
+                errors.userName = 'Characters not allowed';
+            }
+            break;
+        case 'firstName':
+            if (value.length > 75) {
+                errors.firstName = 'Firstname limited to 75 characters';
+            } else if (!value.match(/[^a-z0-9]/gi)) {
+                errors.firstName = 'Characters not allowed';
+            }
+            break;
+        case 'lastName':
+            if (value.length > 75) {
+                errors.lastName = 'Lastname limited to 75 characters';
+            } else if (!value.match(/[^a-z0-9]/gi)) {
+                errors.lastName = 'Characters not allowed';
+            }
+            break;
+        case 'email':
+            if (!value) {
+                errors.email = 'Champ requis';
+            } else if (!value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
+                errors.email = 'Invalid email';
+            }
+            break;
+    }
+
+    return errors;
+}
+
 const fields = [
     {
         name: "userName",
@@ -55,13 +92,8 @@ const fields = [
         type: "text",
     },
     {
-        name: "password",
-        label: "PASSWORD",
-        type: "password",
-    },
-    {
         name: "isActif",
-        label: "ACTIF",
+        label: "ENABLED",
         type: "switch",
     },
 ];
@@ -72,6 +104,7 @@ const PersonalComponent = () => {
     const [values, setValues] = useState(personalInfos);
     const [preview, setPreview] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
+    const [errors, setErrors] = useState('');
     const valuesRef = useRef();
     const dispatch = useDispatch();
 
@@ -96,11 +129,24 @@ const PersonalComponent = () => {
         firstName: true,
         lastName: true,
         email: true,
-        password: true,
     });
 
     const handleReadOnly = (prop) => () => {
-        setReadOnly({...readOnly, [prop]: !readOnly[prop]});
+
+        const checkInput = validate(prop, values[prop]);
+
+        if (readOnly[prop]) {
+            setReadOnly({...readOnly, [prop]: !readOnly[prop]});
+        } else {
+            console.log(checkInput);
+            if (checkInput) {
+                setErrors(checkInput);
+            } else {
+                const errorsState = errors.filter(error => error !== prop);
+                setErrors({...errorsState});
+                setReadOnly({...readOnly, [prop]: !readOnly[prop]});
+            }
+        }
     }
 
     const handleInputChange = (event) => {
@@ -202,6 +248,8 @@ const PersonalComponent = () => {
                                     readOnly={Boolean(readOnly[field.name])}
                                     handleReadOnly={handleReadOnly}
                                     onChange={handleInputChange}
+                                    errors={errors[field.name]}
+                                    helperText={errors[field.name]}
                                 />
                         ))}
                     </Grid>

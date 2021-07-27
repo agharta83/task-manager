@@ -21,7 +21,6 @@ class ProfileController extends BaseController
 {
     /**
      * @Route("/api/profile/personal", name="app_profile_personal", methods={"GET"})
-     * @param Request $request
      * @return Response
      * @throws \Exception
      */
@@ -32,11 +31,11 @@ class ProfileController extends BaseController
         $password = random_int(100000, 1000000);
 
         $data = [
-            'userName' => $user->getUsername(),
+            'userName' => $user->getPseudo(),
             'firstName' => $user->getFirstname(),
             'lastName' => $user->getLastname(),
             'email' => $user->getEmail(),
-            'password' => $password,
+//            'password' => $password,
             'isActif' => (bool)$user->getIsActif(),
             'imagePath' => $user->getImagePath(),
         ];
@@ -93,11 +92,11 @@ class ProfileController extends BaseController
         $entityManager->flush();
 
         $data = [
-            'userName' => $user->getUsername(),
+            'userName' => $user->getPseudo(),
             'firstName' => $user->getFirstname(),
             'lastName' => $user->getLastname(),
             'email' => $user->getEmail(),
-            'password' => random_int(100000, 1000000),
+//            'password' => random_int(100000, 1000000),
             'isActif' => (bool)$user->getIsActif(),
             'imagePath' => $user->getImagePath(),
         ];

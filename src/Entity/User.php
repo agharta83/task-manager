@@ -49,7 +49,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=75)
      */
-    private $username;
+    private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=75, nullable=true)
@@ -196,9 +196,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function setUsername(string $username): self
+    public function getPseudo()
     {
-        $this->username = $username;
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }

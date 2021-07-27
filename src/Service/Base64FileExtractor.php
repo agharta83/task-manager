@@ -80,7 +80,7 @@ class Base64FileExtractor
                 echo $e->getMessage();
             }
         }
-        
+
         return false;
     }
 }
