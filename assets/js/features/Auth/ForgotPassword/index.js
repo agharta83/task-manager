@@ -9,6 +9,7 @@ import TabPanel from "../../../Reusable/TabPanel";
 import {toast} from "react-hot-toast";
 import clsx from "clsx";
 import {sendMailForgotPassword} from "../authThunk";
+import {validateInputForgotPassword} from "../../../helpers/InputsValidator";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -29,18 +30,6 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: -12,
     },
 }));
-
-const validate = values => {
-    const errors = {};
-
-    if (!values.email) {
-        errors.email = 'Champ requis';
-    } else if (!values.email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-        errors.email = 'Email invalide';
-    }
-
-    return errors;
-};
 
 const ForgotPasswordForm = ({value}) => {
     const classes = useStyles();
@@ -77,7 +66,7 @@ const ForgotPasswordForm = ({value}) => {
             <Form
                 name="forgot_password_form"
                 onSubmit={mainHandleSubmit}
-                validate={validate}
+                validate={validateInputForgotPassword}
                 render={({handleSubmit, form, submitting, values}) => (
                     <form onSubmit={handleSubmit} noValidate method="POST">
                         <Grid container spacing={1} alignItems="flex-end" justify="center"

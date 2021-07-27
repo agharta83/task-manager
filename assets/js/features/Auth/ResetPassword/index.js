@@ -19,22 +19,7 @@ import {toast} from "react-hot-toast";
 import {authSelector, clearState} from "../AuthSlice";
 import {useHistory} from "react-router";
 import {resetPassword} from "../authThunk";
-
-const validate = values => {
-    const errors = {};
-
-    if (!values.password) {
-        errors.password = 'Champ requis';
-    }
-
-    if (!values.plainPassword) {
-        errors.plainPassword = 'Champ requis';
-    } else if(values.plainPassword !== values.password) {
-        errors.plainPassword = "Le mot de passe doit être identique"
-    }
-
-    return errors;
-}
+import {validateInputResetPassword} from "../../../helpers/InputsValidator";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -122,7 +107,7 @@ const ResetPasswordForm = ({value}) => {
                         <Form
                             name="change_password_form"
                             onSubmit={mainHandleSubmit}
-                            validate={validate}
+                            validate={validateInputResetPassword}
                             render={({handleSubmit, form, submitting, values}) => (
                                 <form onSubmit={handleSubmit} noValidate method="POST">
                                     <Grid container spacing={1} alignItems="flex-end" justify="center" type="password" className={classes.padding}>

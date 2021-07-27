@@ -9,6 +9,7 @@ import {isEmptyObject, UPLOADS_PATH} from "../../../helpers/utils";
 import InputSwitch from "../../../Reusable/Switch";
 import {updatePersonalInfos} from "../profileThunk";
 import Avatar from "react-avatar-edit";
+import {validateInputPersonalInfos} from "../../../helpers/InputsValidator";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -32,43 +33,6 @@ const useStyles = makeStyles((theme) => ({
         height: '100px',
     }
 }));
-
-const validate = (name, value) => {
-    const errors = {};
-
-    switch (name) {
-        case 'userName':
-            if (value.length > 75) {
-                errors.userName = 'Username limited to 75 characters';
-            } else if (!value.match(/[^a-z0-9]/gi)) {
-                errors.userName = 'Characters not allowed';
-            }
-            break;
-        case 'firstName':
-            if (value.length > 75) {
-                errors.firstName = 'Firstname limited to 75 characters';
-            } else if (!value.match(/[^a-z0-9]/gi)) {
-                errors.firstName = 'Characters not allowed';
-            }
-            break;
-        case 'lastName':
-            if (value.length > 75) {
-                errors.lastName = 'Lastname limited to 75 characters';
-            } else if (!value.match(/[^a-z0-9]/gi)) {
-                errors.lastName = 'Characters not allowed';
-            }
-            break;
-        case 'email':
-            if (!value) {
-                errors.email = 'Champ requis';
-            } else if (!value.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-                errors.email = 'Invalid email';
-            }
-            break;
-    }
-
-    return errors;
-}
 
 const fields = [
     {
@@ -133,7 +97,7 @@ const PersonalComponent = () => {
 
     const handleReadOnly = (prop) => () => {
 
-        const checkInput = validate(prop, values[prop]);
+        const checkInput = validateInputPersonalInfos(prop, values[prop]);
 
         if (readOnly[prop]) {
             setReadOnly({...readOnly, [prop]: !readOnly[prop]});

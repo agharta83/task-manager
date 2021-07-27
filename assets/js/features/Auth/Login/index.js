@@ -10,6 +10,7 @@ import {authSelector, clearState, showForgotPasswordForm} from "../AuthSlice";
 import {toast} from "react-hot-toast";
 import clsx from "clsx";
 import {loginUser} from "../authThunk";
+import {validateInputLogin} from "../../../helpers/InputsValidator";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -30,22 +31,6 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: -12,
     },
 }));
-
-const validate = values => {
-    const errors = {};
-
-    if (!values.email) {
-        errors.email = 'Champ requis';
-    } else if (!values.email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-        errors.email = 'Email invalide';
-    }
-
-    if (!values.password) {
-        errors.password = 'Champ requis';
-    }
-
-    return errors;
-};
 
 const LoginForm = ({value}) => {
     const classes = useStyles();
@@ -94,7 +79,7 @@ const LoginForm = ({value}) => {
             <Form
                 name="login_form"
                 onSubmit={mainHandleSubmit}
-                validate={validate}
+                validate={validateInputLogin}
                 render={({handleSubmit, form, submitting, values}) => (
                     <form onSubmit={handleSubmit} noValidate method="POST">
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
