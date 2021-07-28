@@ -29,7 +29,6 @@ class ResetPasswordController extends BaseController
 
     public function __construct(ResetPasswordHelperInterface $resetPasswordHelper)
     {
-        parent::__construct();
         $this->resetPasswordHelper = $resetPasswordHelper;
     }
 
@@ -203,7 +202,7 @@ class ResetPasswordController extends BaseController
         );
 
         $user->setPassword($encodedPassword);
-        $this->entityManager->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         // The session is cleaned up after the password has been changed.
         $this->cleanSessionAfterReset();

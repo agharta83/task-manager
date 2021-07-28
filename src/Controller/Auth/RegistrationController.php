@@ -26,7 +26,6 @@ class RegistrationController extends BaseController
 
     public function __construct(EmailVerifier $emailVerifier)
     {
-        parent::__construct();
         $this->emailVerifier = $emailVerifier;
     }
 
@@ -74,8 +73,8 @@ class RegistrationController extends BaseController
         $user->setDateCreate(new DateTime('now'));
         $user->setIsActif(true);
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->getDoctrine()->getManager()->persist($user);
+        $this->getDoctrine()->getManager()->flush();
 
         // generate a signed url and email it to the user
         $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,

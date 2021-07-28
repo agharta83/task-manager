@@ -22,11 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends BaseController
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * @Route("/api/profile/personal", name="app_profile_personal", methods={"GET"})
      * @return Response
@@ -94,8 +89,8 @@ class ProfileController extends BaseController
             }
         }
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->getDoctrine()->getManager()->persist($user);
+        $this->getDoctrine()->getManager()->flush();
 
         $data = [
             'userName' => $user->getPseudo(),

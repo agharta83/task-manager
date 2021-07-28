@@ -13,10 +13,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends BaseController
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * @Route("/login", name="app_login")

@@ -11,13 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class BaseController extends AbstractController
 {
-    /** @var ObjectManager  */
-    protected ObjectManager $entityManager;
-
-    public function __construct()
-    {
-        $this->entityManager = $this->getDoctrine()->getManager();
-    }
 
     /**
      * @param $data // Usually on object you want to serialize
