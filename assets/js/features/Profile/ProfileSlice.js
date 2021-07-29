@@ -25,7 +25,14 @@ export const profileSlice = createSlice({
             errorMessage: '',
         }
     },
-    reducers: {},
+    reducers: {
+        setUserName: (state, payload) => {
+            state.personalInfo.userName = payload;
+        },
+        setImagePath: (state, payload) => {
+            state.personalInfo.imagePath = payload;
+        }
+    },
     extraReducers: {
         [getPersonalInfo.fulfilled]: (state, {payload}) => {
             state.personalInfo = {...payload};
@@ -55,3 +62,5 @@ export const profileSlice = createSlice({
 export const profileSelector = (state) => state.profile;
 
 export const personalInfosSelector = (state => state.profile.personalInfo);
+
+export const { setUserName, setImagePath } = profileSlice.actions;

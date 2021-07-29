@@ -65,6 +65,8 @@ class SecurityController extends BaseController
 
             $data['isLogged'] = true;
             $data['status'] = 200;
+            $data['userName'] = $this->getUser()->getPseudo();
+            $data['imagePath'] = $this->getUser()->getImagePath();
         }
 
         return $this->createApiResponse($data, $data['status']);
