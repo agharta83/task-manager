@@ -8,21 +8,21 @@ export const validateInputPersonalInfos = (name, value) => {
         case 'userName':
             if (value.length > 75) {
                 errors.userName = 'Username limited to 75 characters';
-            } else if (!value.match(/[^a-z0-9]/gi)) {
+            } else if (!value.match(/^\w+$/)) {
                 errors.userName = 'Characters not allowed';
             }
             break;
         case 'firstName':
             if (value.length > 75) {
                 errors.firstName = 'Firstname limited to 75 characters';
-            } else if (!value.match(/[^a-z0-9]/gi)) {
+            } else if (!value.match(/^\w+$/)) {
                 errors.firstName = 'Characters not allowed';
             }
             break;
         case 'lastName':
             if (value.length > 75) {
                 errors.lastName = 'Lastname limited to 75 characters';
-            } else if (!value.match(/[^a-z0-9]/gi)) {
+            } else if (!value.match(/^\w+$/)) {
                 errors.lastName = 'Characters not allowed';
             }
             break;

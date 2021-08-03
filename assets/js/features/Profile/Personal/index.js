@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {globalProfileSelector, personalInfosSelector} from "../ProfileSlice";
 import {isEmptyObject, UPLOADS_PATH} from "../../../helpers/utils";
 import InputSwitch from "../../../Reusable/Switch";
-import {updatePersonalInfos} from "../profileThunk";
+import {getPersonalInfo, updatePersonalInfos} from "../profileThunk";
 import Avatar from "react-avatar-edit";
 import {validateInputPersonalInfos} from "../../../helpers/InputsValidator";
 import {SpinnerLoader} from "../../../Reusable/SpinnerLoader";
@@ -78,6 +78,10 @@ const PersonalComponent = () => {
     const [errors, setErrors] = useState('');
     const valuesRef = useRef();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPersonalInfo());
+    }, []);
 
     useEffect(() => {
         if (isSuccess && !isEmptyObject(personalInfos)) {

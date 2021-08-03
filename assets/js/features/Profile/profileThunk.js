@@ -24,7 +24,7 @@ export const getPersonalInfo = createAsyncThunk(
 export const updatePersonalInfos = createAsyncThunk(
     'profile/personal/update',
     async ({...values}, thunkAPI) => {
-        console.log(values);
+
         try {
             const response = await apiProfile().post(
                 'personal/update',

@@ -50,7 +50,8 @@ class Base64FileExtractor
 
                 return true;
             } else {
-                throw new Exception('did not match data URI with file data');
+//                throw new Exception('did not match data URI with file data');
+                return false;
             }
         }
 

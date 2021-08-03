@@ -67,11 +67,16 @@ class ProfileController extends BaseController
         foreach ($datas as $key => $value) {
             $methodName = 'get' . ucfirst($key);
             if (method_exists($user, $methodName) && ($key !== "password" && $key !== "imagePath")) {
-                if ($user->{$methodName}() !== $value) {
-                    $setMethodName = 'set' . ucfirst($key);
-                    $user->{$setMethodName}($value);
+                if ($key == 'userName') {
+                    $user->setPseudo($value);
+                } else {
+                    if ($user->{$methodName}() !== $value) {
+                        $setMethodName = 'set' . ucfirst($key);
+                        $user->{$setMethodName}($value);
 //                    $result[] = "Champs " . $key . " de l'entité User mis à jour"; // TODO @Logger
+                    }
                 }
+
             }
         }
 
@@ -79,13 +84,15 @@ class ProfileController extends BaseController
         if ($datas->imagePath !== "") {
             /** Base64 Decode */
             $base64FileExtractor = new Base64FileExtractor($datas->imagePath, 'image');
-            $dataImage = $base64FileExtractor->decodedBase64File();
-            /** Upload File */
-            if ($dataImage) {
-                $uploadedBase64File = new UploadedBase64File($user->getId(), $this->getParameter('kernel.project_dir'), $dataImage);
-                $userImgPath = $uploadedBase64File->saveFile();
-                /** Set user image */
-                if ($userImgPath) $user->setImagePath($userImgPath);
+            if ($base64FileExtractor) {
+                $dataImage = $base64FileExtractor->decodedBase64File();
+                /** Upload File */
+                if ($dataImage) {
+                    $uploadedBase64File = new UploadedBase64File($user->getId(), $this->getParameter('kernel.project_dir'), $dataImage);
+                    $userImgPath = $uploadedBase64File->saveFile();
+                    /** Set user image */
+                    if ($userImgPath) $user->setImagePath($userImgPath);
+                }
             }
         }
 
