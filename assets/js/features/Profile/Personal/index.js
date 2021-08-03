@@ -4,7 +4,7 @@ import {Content, TabContent, TitleContent} from "../../../Theme/StyledComponents
 import {Avatar as AvatarMUI, Button, FormControl, Grid, makeStyles} from "@material-ui/core";
 import InputBox from "../../../Reusable/InputBox";
 import {useDispatch, useSelector} from "react-redux";
-import {personalInfosSelector} from "../ProfileSlice";
+import {globalProfileSelector, personalInfosSelector} from "../ProfileSlice";
 import {isEmptyObject, UPLOADS_PATH} from "../../../helpers/utils";
 import InputSwitch from "../../../Reusable/Switch";
 import {updatePersonalInfos} from "../profileThunk";
@@ -65,6 +65,7 @@ const fields = [
 const PersonalComponent = () => {
     const classes = useStyles();
     const personalInfos = useSelector(personalInfosSelector);
+    const {isFetching, isSuccess, isError, errorMessage} = useSelector(globalProfileSelector);
     const [values, setValues] = useState(personalInfos);
     const [preview, setPreview] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);

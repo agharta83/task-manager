@@ -1,6 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {apiAuth} from "../../helpers/apiCall";
-import {useDispatch} from "react-redux";
 import {setImagePath, setUserName} from "../Profile/ProfileSlice";
 
 
@@ -28,7 +27,6 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
     'user/login',
     async ({email, password}, thunkAPI) => {
-        const dispatch = useDispatch();
         try {
             const response = await apiAuth().post(
                 'login',
@@ -38,8 +36,9 @@ export const loginUser = createAsyncThunk(
 
             if (response.status === 200) {
                 localStorage.setItem('isLogged', data.isLogged);
-                if (data.userName) setUserName(data.userName);
-                if (data.imagePath) setImagePath(data.imagePath);
+                if (data.userName) thunkAPI.dispatch(setUserName(data.userName));
+                if (data.imagePath) thunkAPI.dispatch(setImagePath(data.imagePath));
+
                 return data;
             } else {
                 return thunkAPI.rejectWithValue(data);

@@ -26,10 +26,10 @@ export const profileSlice = createSlice({
         }
     },
     reducers: {
-        setUserName: (state, payload) => {
+        setUserName: (state, {payload}) => {
             state.personalInfo.userName = payload;
         },
-        setImagePath: (state, payload) => {
+        setImagePath: (state, {payload}) => {
             state.personalInfo.imagePath = payload;
         }
     },
@@ -37,6 +37,7 @@ export const profileSlice = createSlice({
         [getPersonalInfo.fulfilled]: (state, {payload}) => {
             state.personalInfo = {...payload};
             state.global.isSuccess = true;
+            state.global.isFetching = false;
         },
         [getPersonalInfo.pending]: (state) => {
             state.global.isFetching = true;
@@ -62,5 +63,6 @@ export const profileSlice = createSlice({
 export const profileSelector = (state) => state.profile;
 
 export const personalInfosSelector = (state => state.profile.personalInfo);
+export const globalProfileSelector = (state => state.profile.global);
 
 export const { setUserName, setImagePath } = profileSlice.actions;
