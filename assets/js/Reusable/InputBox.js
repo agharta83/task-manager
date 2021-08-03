@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 
 const InputBox = ({name, label, value, type, readOnly, handleReadOnly, onChange, errors, helperText, ...props}) => {
     const classes = useStyles();
-    console.log(errors);
 
     return (
         <Grid item>

@@ -10,7 +10,7 @@ import Settings from "./Settings";
 import {Redirect, Route, Switch} from "react-router";
 import {HashRouter} from "react-router-dom";
 import {getPersonalInfo} from "./profileThunk";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 const tabsItem = [
     {
@@ -55,7 +55,7 @@ const ProfileComponent = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getPersonalInfo())
+        dispatch(getPersonalInfo());
     }, []);
 
     return (

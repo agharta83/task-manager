@@ -10,6 +10,7 @@ import InputSwitch from "../../../Reusable/Switch";
 import {updatePersonalInfos} from "../profileThunk";
 import Avatar from "react-avatar-edit";
 import {validateInputPersonalInfos} from "../../../helpers/InputsValidator";
+import {SpinnerLoader} from "../../../Reusable/SpinnerLoader";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -31,6 +32,11 @@ const useStyles = makeStyles((theme) => ({
     large: {
         width: '100px',
         height: '100px',
+    },
+    spinner: {
+        height: '200px',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
     }
 }));
 
@@ -65,7 +71,7 @@ const fields = [
 const PersonalComponent = () => {
     const classes = useStyles();
     const personalInfos = useSelector(personalInfosSelector);
-    const {isFetching, isSuccess, isError, errorMessage} = useSelector(globalProfileSelector);
+    const {isFetching, isSuccess} = useSelector(globalProfileSelector);
     const [values, setValues] = useState(personalInfos);
     const [preview, setPreview] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
@@ -74,7 +80,7 @@ const PersonalComponent = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!isEmptyObject(personalInfos)) {
+        if (isSuccess && !isEmptyObject(personalInfos)) {
             setValues(personalInfos);
         }
     }, [personalInfos]);
@@ -191,46 +197,58 @@ const PersonalComponent = () => {
             <Content>
                 <TitleContent>Personal</TitleContent>
 
-                <FormControl fullWidth className={classes.margin}>
-                    <Grid container spacing={0} direction="column" className={classes.width}>
-                        {fields.map((field, index) => (
-                            field.type === "switch" && typeof values[field.name] == "boolean" ? (
-                                    <InputSwitch
-                                        key={index}
-                                        checked={values[field.name]}
-                                        onChange={handleSwitchChange}
-                                        name={field.name}
-                                        label={field.label}
-                                    />
-                                )
-                                :
-                                <InputBox
-                                    key={index}
-                                    name={field.name}
-                                    label={field.label}
-                                    value={values[field.name] || ''}
-                                    type={field.type}
-                                    readOnly={Boolean(readOnly[field.name])}
-                                    handleReadOnly={handleReadOnly}
-                                    onChange={handleInputChange}
-                                    errors={errors[field.name]}
-                                    helperText={errors[field.name]}
-                                />
-                        ))}
-                    </Grid>
-                    <Grid container spacing={0} direction="column" className={classes.width}>
-                        <Grid item className={classes.marginBottom}>
-                            <Button variant="outlined" size="small" color="primary" className={classes.button}
-                                    onClick={handleChangeAvatar}>
-                                {displayPreview ? 'SAVE AVATAR' : 'CHANGE AVATAR'}
-                            </Button>
+                {isFetching ? (
+                        <Grid container spacing={0} className={classes.spinner}>
+                            <SpinnerLoader/>
                         </Grid>
-                        <Grid item className={classes.marginBottom}>
-                            <AvatarMUI alt="Audrey" src={preview || UPLOADS_PATH + values.imagePath} className={classes.large} />
-                        </Grid>
-                        {renderPreviewBlock()}
-                    </Grid>
-                </FormControl>
+                    )
+                    : (
+                        <FormControl fullWidth className={classes.margin}>
+
+                            <Grid container spacing={0} direction="column" className={classes.width}>
+                                {fields.map((field, index) => (
+                                    field.type === "switch" && typeof values[field.name] == "boolean" ? (
+                                            <InputSwitch
+                                                key={index}
+                                                checked={values[field.name]}
+                                                onChange={handleSwitchChange}
+                                                name={field.name}
+                                                label={field.label}
+                                            />
+                                        )
+                                        :
+                                        <InputBox
+                                            key={index}
+                                            name={field.name}
+                                            label={field.label}
+                                            value={values[field.name] || ''}
+                                            type={field.type}
+                                            readOnly={Boolean(readOnly[field.name])}
+                                            handleReadOnly={handleReadOnly}
+                                            onChange={handleInputChange}
+                                            errors={errors[field.name]}
+                                            helperText={errors[field.name]}
+                                        />
+                                ))}
+                            </Grid>
+                            <Grid container spacing={0} direction="column" className={classes.width}>
+                                <Grid item className={classes.marginBottom}>
+                                    <Button variant="outlined" size="small" color="primary"
+                                            className={classes.button}
+                                            onClick={handleChangeAvatar}>
+                                        {displayPreview ? 'SAVE AVATAR' : 'CHANGE AVATAR'}
+                                    </Button>
+                                </Grid>
+                                <Grid item className={classes.marginBottom}>
+                                    <AvatarMUI alt="Audrey" src={preview || UPLOADS_PATH + values.imagePath}
+                                               className={classes.large}/>
+                                </Grid>
+                                {renderPreviewBlock()}
+                            </Grid>
+
+                        </FormControl>
+                    )
+                }
             </Content>
         </TabContent>
     );
