@@ -49,7 +49,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=75)
      */
-    private $username;
+    private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=75, nullable=true)
@@ -66,6 +66,14 @@ class User implements UserInterface
      */
     private $isVerified = false;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $imagePath;
+
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -107,7 +115,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string) $this->email;
     }
 
     /**
@@ -188,9 +196,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function setUsername(string $username): self
+    public function getPseudo()
     {
-        $this->username = $username;
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }
@@ -230,4 +243,22 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getImagePath()
+    {
+        return $this->imagePath;
+    }
+
+    /**
+     * @param mixed $imagePath
+     */
+    public function setImagePath($imagePath): void
+    {
+        $this->imagePath = $imagePath;
+    }
+
+
 }

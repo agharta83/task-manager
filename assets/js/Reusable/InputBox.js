@@ -1,5 +1,5 @@
 import React from "react";
-import {FormControlLabel, Grid, makeStyles, Switch, TextField, Button} from "@material-ui/core";
+import { Grid, makeStyles, TextField, Button} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     textField: {
@@ -7,14 +7,20 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         position: 'relative',
-        top: '-40px',
-        right: '-475px',
+        top: '-55px',
+        right: '-225px',
         fontSize: '0.8em',
         padding: '0px 9px',
     },
+    noPadding: {
+        padding: 0,
+    },
+    label: {
+        top: '-6px',
+    }
 }));
 
-const InputBox = ({name, label, value, type, readOnly, handleReadOnly, onChange, ...props}) => {
+const InputBox = ({name, label, value, type, readOnly, handleReadOnly, onChange, errors, helperText, ...props}) => {
     const classes = useStyles();
 
     return (
@@ -24,10 +30,16 @@ const InputBox = ({name, label, value, type, readOnly, handleReadOnly, onChange,
                 label={label}
                 value={value}
                 onChange={onChange}
+                error={errors}
+                helperText={errors || ' '} /* Hack for display same height when they are helperText */
                 type={type}
                 className={classes.textField}
                 InputProps={{
                     readOnly: Boolean(readOnly),
+                    classes: { input: classes.noPadding }
+                }}
+                InputLabelProps={{
+                    classes: { formControl: classes.label }
                 }}
             />
             <Button variant="outlined" size="small" color="primary" className={classes.button}

@@ -8,28 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {authSelector, clearState} from "../AuthSlice";
 import {toast} from "react-hot-toast";
 import {registerUser} from "../authThunk";
-
-const validate = values => {
-    const errors = {};
-
-    if (!values.email) {
-        errors.email = 'Champ requis';
-    } else if (!values.email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/)) {
-        errors.email = 'Email invalide';
-    }
-
-    if (!values.password) {
-        errors.password = 'Champ requis';
-    }
-
-    if (!values.plainPassword) {
-        errors.plainPassword = 'Champ requis';
-    } else if(values.plainPassword !== values.password) {
-        errors.plainPassword = "Le mot de passe doit être identique"
-    }
-
-    return errors;
-}
+import {validateInputRegister} from "../../../helpers/InputsValidator";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -89,7 +68,7 @@ const RegisterForm = ({value}) => {
             <Form
                 name="registration_form"
                 onSubmit={mainHandleSubmit}
-                validate={validate}
+                validate={validateInputRegister}
                 render={({handleSubmit, form, submitting, values}) => (
                     <form onSubmit={handleSubmit} noValidate method="POST">
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>

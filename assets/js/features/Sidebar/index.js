@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {logoutUser} from "../Auth/authThunk";
 import {useHistory} from "react-router";
 // //All the svg files
@@ -8,7 +8,12 @@ import PowerOff from "../../img/power-off-solid.svg";
 // StyledComponent
 import {Container, SidebarContainer, Button, Logo, SlickBar, Item, Text, Profile, Details, Name, Logout} from "../../Theme/StyledComponents/Sidebar";
 import {AccountTree, CalendarToday, Description, Group, Home} from "@material-ui/icons";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {Link} from "react-router-dom";
+import {isEmptyObject, UPLOADS_PATH} from "../../helpers/utils";
+import {Avatar as AvatarMUI} from "@material-ui/core";
+import {personalInfosSelector} from "../Profile/ProfileSlice";
+import {updatePersonalInfos} from "../Profile/profileThunk";
 
 const tabsItem = [
     {
@@ -42,8 +47,20 @@ const tabsItem = [
 const Sidebar = () => {
     const [click, setClick] = useState(false);
     const [profileClick, setProfileClick] = useState(false);
+    const personalInfos = useSelector(personalInfosSelector);
+    const [values, setValues] = useState(personalInfos);
     const history = useHistory();
-    const dispatch = useDispatch();
+    const valuesRef = useRef();
+
+    useEffect(() => {
+        if (!isEmptyObject(personalInfos)) {
+            setValues(personalInfos);
+        }
+    }, [personalInfos]);
+
+    useEffect(() => {
+        valuesRef.current = values;
+    }, [values]);
 
     const handleClick = () => setClick(!click);
     const handleProfileClick = () => setProfileClick(!profileClick)
@@ -78,15 +95,16 @@ const Sidebar = () => {
                 </SlickBar>
 
                 <Profile clicked={profileClick}>
-                    <img
-                        onClick={handleProfileClick}
-                        src="https://picsum.photos/200"
-                        alt="Profile"
-                    />
+                    <AvatarMUI alt="Profile" src={UPLOADS_PATH + values.imagePath} onClick={handleProfileClick} />
+                    {/*<img*/}
+                    {/*    onClick={handleProfileClick}*/}
+                    {/*    src="https://picsum.photos/200"*/}
+                    {/*    alt="Profile"*/}
+                    {/*/>*/}
                     <Details clicked={profileClick}>
                         <Name>
-                            <h4>Jhon&nbsp;Doe</h4>
-                            <a href="/profile">view&nbsp;profile</a>
+                            <h4>{values.userName}</h4>
+                            <Link to="/profile">view&nbsp;profile</Link>
                         </Name>
 
                         <Logout>

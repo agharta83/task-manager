@@ -9,8 +9,6 @@ import Payment from "./Payment";
 import Settings from "./Settings";
 import {Redirect, Route, Switch} from "react-router";
 import {HashRouter} from "react-router-dom";
-import {getPersonalInfo} from "./profileThunk";
-import {useDispatch} from "react-redux";
 
 const tabsItem = [
     {
@@ -52,11 +50,6 @@ const tabsItem = [
 
 const ProfileComponent = () => {
     const [click, setClick] = useState(false);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getPersonalInfo())
-    }, []);
 
     return (
         <Container>

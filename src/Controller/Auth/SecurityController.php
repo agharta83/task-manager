@@ -1,26 +1,19 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Auth;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Security\LoginAuthenticator;
-use App\Service\ApiToken;
-use App\Service\SessionManager;
-use ContainerHCL0xfD\getDoctrine_DatabaseDropCommandService;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use App\Controller\BaseController;
+use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends BaseController
 {
+
     /**
      * @Route("/login", name="app_login")
      * @param AuthenticationUtils $authenticationUtils
@@ -34,10 +27,11 @@ class SecurityController extends BaseController
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-//        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->createApiResponse($lastUsername, $error);
     }
 
     /**
@@ -45,8 +39,7 @@ class SecurityController extends BaseController
      */
     public function logout()
     {
-        // TODO Destroy session
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
     /**
@@ -56,16 +49,27 @@ class SecurityController extends BaseController
      */
     public function loginUser(Request $request)
     {
-        $user = $this->getUser();
-        $token = new ApiToken($user);
-
-        $this->sessionManager->storeInSession('apitoken', $token->getToken());
-
         $data = [
-            'token' => $token->getToken(),
+            'isLogged' => false,
+            'status' => 400
         ];
 
-        return $this->createApiResponse($data, 200);
+        if ($this->getUser()) {
+            if (!$this->getUser()->getIsActif()) {
+                $this->getUser()->setIsActif(true);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($this->getUser());
+                $entityManager->flush();
+            }
+
+            $data['isLogged'] = true;
+            $data['status'] = 200;
+            $data['userName'] = $this->getUser()->getPseudo();
+            $data['imagePath'] = $this->getUser()->getImagePath();
+        }
+
+        return $this->createApiResponse($data, $data['status']);
 
     }
 }
