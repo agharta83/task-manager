@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
     },
     noPadding: {
         padding: 0,
+    },
+    label: {
+        top: '-6px',
     }
 }));
 
@@ -34,6 +37,9 @@ const InputBox = ({name, label, value, type, readOnly, handleReadOnly, onChange,
                 InputProps={{
                     readOnly: Boolean(readOnly),
                     classes: { input: classes.noPadding }
+                }}
+                InputLabelProps={{
+                    classes: { formControl: classes.label }
                 }}
             />
             <Button variant="outlined" size="small" color="primary" className={classes.button}
