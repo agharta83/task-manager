@@ -5,12 +5,13 @@ import {Avatar as AvatarMUI, Button, FormControl, Grid, makeStyles} from "@mater
 import InputBox from "../../../Reusable/InputBox";
 import {useDispatch, useSelector} from "react-redux";
 import {globalProfileSelector, personalInfosSelector} from "../ProfileSlice";
-import {isEmptyObject, UPLOADS_PATH} from "../../../helpers/utils";
+import {isEmptyObject, isEmptyValueOfObject, UPLOADS_PATH} from "../../../helpers/utils";
 import InputSwitch from "../../../Reusable/Switch";
 import {getPersonalInfo, updatePersonalInfos} from "../profileThunk";
 import Avatar from "react-avatar-edit";
 import {validateInputPersonalInfos} from "../../../helpers/InputsValidator";
 import {SpinnerLoader} from "../../../Reusable/SpinnerLoader";
+import {useInitialMount} from "../../../helpers/hooks";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -71,7 +72,7 @@ const fields = [
 const PersonalComponent = () => {
     const classes = useStyles();
     const personalInfos = useSelector(personalInfosSelector);
-    const {isFetching, isSuccess} = useSelector(globalProfileSelector);
+    const {isFetching, isSuccess, loaded} = useSelector(globalProfileSelector);
     const [values, setValues] = useState(personalInfos);
     const [preview, setPreview] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
@@ -80,7 +81,10 @@ const PersonalComponent = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getPersonalInfo());
+        if (!loaded.personalInfo) {
+            dispatch(getPersonalInfo());
+        }
+
     }, []);
 
     useEffect(() => {
@@ -93,6 +97,7 @@ const PersonalComponent = () => {
         valuesRef.current = values;
     }, [values]);
 
+    // TODO update uniquement si les values ont été modifié
     useEffect(() => {
         return () => {
             dispatch(updatePersonalInfos(valuesRef.current));
@@ -113,13 +118,15 @@ const PersonalComponent = () => {
         if (readOnly[prop]) {
             setReadOnly({...readOnly, [prop]: !readOnly[prop]});
         } else {
-            console.log(checkInput);
-            if (checkInput) {
+            if (checkInput.length > 0) {
                 setErrors(checkInput);
             } else {
-                const errorsState = errors.filter(error => error !== prop);
-                setErrors({...errorsState});
-                setReadOnly({...readOnly, [prop]: !readOnly[prop]});
+               if (errors.length > 0) {
+                   const errorsState = errors.filter(error => error !== prop);
+                   setErrors({...errorsState});
+               }
+
+               setReadOnly({...readOnly, [prop]: !readOnly[prop]});
             }
         }
     }

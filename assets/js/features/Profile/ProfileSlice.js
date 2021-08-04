@@ -23,6 +23,9 @@ export const profileSlice = createSlice({
             isFetching: false,
             isError: false,
             errorMessage: '',
+            loaded: {
+                personalInfo: false,
+            }
         }
     },
     reducers: {
@@ -38,17 +41,22 @@ export const profileSlice = createSlice({
             state.personalInfo = {...payload};
             state.global.isSuccess = true;
             state.global.isFetching = false;
+            state.global.loaded.personalInfo = true;
         },
         [getPersonalInfo.pending]: (state) => {
             state.global.isFetching = true;
+            state.global.loaded.personalInfo = false;
         },
         [getPersonalInfo.rejected]: (state, {payload}) => {
             state.global.isError = true;
             state.global.errorMessage = payload;
+            state.global.loaded.personalInfo = false;
+            state.global.isFetching = false;
         },
         [updatePersonalInfos.fulfilled]: (state, {payload}) => {
             state.personalInfo = {...payload};
             state.global.isSuccess = true;
+            state.global.isFetching = false;
         },
         [updatePersonalInfos.pending]: (state) => {
             state.global.isFetching = true;
@@ -56,6 +64,7 @@ export const profileSlice = createSlice({
         [updatePersonalInfos.rejected]: (state, {payload}) => {
             state.global.isError = true;
             state.global.errorMessage = payload;
+            state.global.isFetching = false;
         }
     },
 });
