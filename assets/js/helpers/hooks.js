@@ -14,7 +14,6 @@ export const useWillMount = (fn) => {
 /* Render component first time */
 export const useInitialMount = () => {
     const isFirst = useRef(true);
-    console.log(isFirst);
 
     if (isFirst.current) {
         isFirst.current = false;

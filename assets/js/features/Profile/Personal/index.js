@@ -11,7 +11,7 @@ import {getPersonalInfo, updatePersonalInfos} from "../profileThunk";
 import Avatar from "react-avatar-edit";
 import {validateInputPersonalInfos} from "../../../helpers/InputsValidator";
 import {SpinnerLoader} from "../../../Reusable/SpinnerLoader";
-import {useInitialMount} from "../../../helpers/hooks";
+import {useInitialMount, usePrevious} from "../../../helpers/hooks";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -78,6 +78,7 @@ const PersonalComponent = () => {
     const [displayPreview, setDisplayPreview] = useState(false);
     const [errors, setErrors] = useState('');
     const valuesRef = useRef();
+    const prevValues = useRef(); // Permet d'utiliser les valeurs précédents pour les comparer et update uniquement si elles ont été modifié (usePrevious custom hook retourne undefined ici)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -90,6 +91,7 @@ const PersonalComponent = () => {
     useEffect(() => {
         if (isSuccess && !isEmptyObject(personalInfos)) {
             setValues(personalInfos);
+            prevValues.current = personalInfos;
         }
     }, [personalInfos]);
 
@@ -97,10 +99,11 @@ const PersonalComponent = () => {
         valuesRef.current = values;
     }, [values]);
 
-    // TODO update uniquement si les values ont été modifié
     useEffect(() => {
         return () => {
-            dispatch(updatePersonalInfos(valuesRef.current));
+            if (valuesRef.current !== prevValues.current) {
+                dispatch(updatePersonalInfos(valuesRef.current));
+            }
         }
     }, []);
 
