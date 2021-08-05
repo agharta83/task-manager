@@ -3,14 +3,14 @@ import {Button, CircularProgress, Grid, IconButton, InputAdornment, Link, makeSt
 import {TextField} from 'mui-rff';
 import {AccountCircle, Lock as LockIcon, Visibility, VisibilityOff} from "@material-ui/icons";
 import TabPanel from "../../../Reusable/TabPanel";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useHistory} from "react-router";
 import {Form} from "react-final-form";
-import {authSelector, clearState, showForgotPasswordForm} from "../AuthSlice";
+import {showForgotPasswordForm} from "../AuthSlice";
 import {toast} from "react-hot-toast";
 import clsx from "clsx";
-import {loginUser} from "../authThunk";
 import {validateInputLogin} from "../../../helpers/InputsValidator";
+import {useLoginUserMutation} from "../AuthService";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -36,7 +36,7 @@ const LoginForm = ({value}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const { isFetching, isLoginSuccess, isError, errorMessage } = useSelector(authSelector);
+    const [ loginUser, {isLoading, isSuccess, isError, errorMessage} ] = useLoginUserMutation();
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => {
@@ -48,7 +48,7 @@ const LoginForm = ({value}) => {
     };
 
     const mainHandleSubmit = data => {
-        dispatch(loginUser(data));
+        loginUser(data);
     };
 
     const handleForgotPassword = () => {
@@ -56,23 +56,15 @@ const LoginForm = ({value}) => {
     }
 
     useEffect(() => {
-        return () => {
-            dispatch(clearState());
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isLoginSuccess) {
+        if (isSuccess) {
             history.push('/home');
             toast.success('Bienvenu');
-            dispatch(clearState());
         }
 
         if (isError) {
             toast.error(errorMessage);
-            dispatch(clearState());
         }
-    }, [isLoginSuccess]);
+    }, [isSuccess]);
 
     return (
         <TabPanel value={value} index="connexion">
@@ -108,10 +100,10 @@ const LoginForm = ({value}) => {
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
                             <Grid item className={ clsx(classes.marginTop, classes.wrapper)}>
-                                <Button variant="contained" color="secondary" type="submit" name="login_form[submit]" disabled={submitting || isFetching}>
+                                <Button variant="contained" color="secondary" type="submit" name="login_form[submit]" disabled={submitting || isLoading}>
                                     SE CONNECTER
                                 </Button>
-                                {isFetching && <CircularProgress size={24} className={classes.buttonProgress} />}
+                                {isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Grid>
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>

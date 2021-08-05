@@ -1,100 +1,40 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {loginUser, registerUser, resetPassword, sendMailForgotPassword} from "./authThunk";
+import {authApi} from "./AuthService";
+
+const initialState = {
+    user: {
+        userName: null,
+        imagePath: null,
+    },
+    isAuthenticated: false,
+    forgotPassword: false,
+}
 
 export const authSlice = createSlice({
     name: 'auth',
-    initialState: {
-        email: '',
-        roles : [],
-        isAuthenticated: false,
-        forgotPassword : false,
-        isFetching: false,
-        isRegisterSuccess: false,
-        isLoginSuccess: false,
-        isSendMailSuccess: false,
-        isResetPasswordSuccess: false,
-        isError: false,
-        errorMessage: [],
-    },
+    initialState,
     reducers: {
-        clearState: (state) => {
-            state.isError = false;
-            state.isRegisterSuccess = false;
-            state.isLoginSuccess = false;
-            state.isSendMailSuccess = false;
-            state.isResetPasswordSuccess = false;
-            state.isFetching = false;
-
-            return state;
-        },
         showForgotPasswordForm: (state) => {
             state.forgotPassword = true;
 
             return state;
         },
+        logout: () => initialState,
     },
-    extraReducers: {
-        [registerUser.fulfilled]: (state, { payload }) => {
-            state.isFetching = false;
-            state.isRegisterSuccess = true;
-            state.email = payload.email;
-        },
-        [registerUser.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [registerUser.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        },
-        [loginUser.fulfilled]: (state, {payload}) => {
-            state.email = payload.email;
-            state.roles = payload.roles;
-            state.isAuthenticated = true;
-            state.isFetching = false;
-            state.isLoginSuccess = true;
-
-            return state;
-        },
-        [loginUser.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [loginUser.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        },
-        [sendMailForgotPassword.fulfilled]: (state) => {
-            state.isSendMailSuccess = true;
-            state.isFetching = false;
-
-            return state;
-        },
-        [sendMailForgotPassword.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [sendMailForgotPassword.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        },
-        [resetPassword.fulfilled]: (state) => {
-            state.isResetPasswordSuccess = true;
-            state.isFetching = false;
-
-            return state;
-        },
-        [resetPassword.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [resetPassword.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        }
+    extraReducers: (builder) => {
+        builder
+            .addMatcher(authApi.endpoints.loginUser.matchFulfilled, (state, {payload}) => {
+                state.isAuthenticated = payload?.isLogged;
+                state.user.userName = payload?.userName;
+                state.user.imagePath = payload?.imagePath;
+            })
+            .addMatcher(authApi.endpoints.logoutUser.matchFulfilled, (state, action) => {
+                action.logout();
+            })
     },
 });
 
-export const { clearState, showForgotPasswordForm } = authSlice.actions;
-
+export const { showForgotPasswordForm } = authSlice.actions;
+export const selectIsAuthenticated = (state) => state.auth.isAuthenticated
 export const authSelector = (state) => state.auth;
+export default authSlice.reducer;

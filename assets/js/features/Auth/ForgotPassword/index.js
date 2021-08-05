@@ -3,13 +3,11 @@ import {Button, CircularProgress, Grid, InputAdornment, makeStyles, Typography} 
 import {TextField} from "mui-rff";
 import {AccountCircle} from "@material-ui/icons";
 import {Form} from "react-final-form";
-import {authSelector, clearState} from "../AuthSlice";
-import {useDispatch, useSelector} from "react-redux";
 import TabPanel from "../../../Reusable/TabPanel";
 import {toast} from "react-hot-toast";
 import clsx from "clsx";
-import {sendMailForgotPassword} from "../authThunk";
 import {validateInputForgotPassword} from "../../../helpers/InputsValidator";
+import {useSendMailForgotPasswordMutation} from "../AuthService";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -33,30 +31,21 @@ const useStyles = makeStyles((theme) => ({
 
 const ForgotPasswordForm = ({value}) => {
     const classes = useStyles();
-    const dispatch = useDispatch();
-    const {isFetching, isError, errorMessage, isSendMailSuccess} = useSelector(authSelector);
+    const [sendMailForgotPassword, { isLoading, isSuccess, isError, errorMessage }] = useSendMailForgotPasswordMutation();
 
     const mainHandleSubmit = data => {
-        dispatch(sendMailForgotPassword(data));
+        sendMailForgotPassword(data);
     };
 
     useEffect(() => {
-        return () => {
-            dispatch(clearState());
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isSendMailSuccess) {
+        if (isSuccess) {
             toast.success('Un mail de réinitialisation a été envoyé !');
-            dispatch(clearState());
         }
 
         if (isError) {
             toast.error(errorMessage);
-            dispatch(clearState());
         }
-    }, [isSendMailSuccess, isError]);
+    }, [isSuccess, isError]);
 
     return (
         <TabPanel value={value} index="forgotPassword">
@@ -83,10 +72,10 @@ const ForgotPasswordForm = ({value}) => {
                               className={classes.padding}>
                             <Grid item className={clsx(classes.marginTop, classes.wrapper)}>
                                 <Button variant="contained" color="secondary" type="submit"
-                                        name="login_form[submit]" disabled={submitting || isFetching}>
+                                        name="login_form[submit]" disabled={submitting || isLoading}>
                                     ENVOYER EMAIL
                                 </Button>
-                                {isFetching && <CircularProgress size={24} className={classes.buttonProgress} />}
+                                {isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Grid>
                         </Grid>
                     </form>

@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from "react";
-import {logoutUser} from "../Auth/authThunk";
 import {useHistory} from "react-router";
 // //All the svg files
 import logo from "../../img/logo.svg";
@@ -14,6 +13,7 @@ import {isEmptyObject, UPLOADS_PATH} from "../../helpers/utils";
 import {Avatar as AvatarMUI} from "@material-ui/core";
 import {personalInfosSelector} from "../Profile/ProfileSlice";
 import {updatePersonalInfos} from "../Profile/profileThunk";
+import {useLogoutUserQuery} from "../Auth/AuthService";
 
 const tabsItem = [
     {
@@ -47,6 +47,7 @@ const tabsItem = [
 const Sidebar = () => {
     const [click, setClick] = useState(false);
     const [profileClick, setProfileClick] = useState(false);
+    const [logoutUser] = useLogoutUserQuery();
     const personalInfos = useSelector(personalInfosSelector);
     const [values, setValues] = useState(personalInfos);
     const history = useHistory();
@@ -96,11 +97,6 @@ const Sidebar = () => {
 
                 <Profile clicked={profileClick}>
                     <AvatarMUI alt="Profile" src={UPLOADS_PATH + values.imagePath} onClick={handleProfileClick} />
-                    {/*<img*/}
-                    {/*    onClick={handleProfileClick}*/}
-                    {/*    src="https://picsum.photos/200"*/}
-                    {/*    alt="Profile"*/}
-                    {/*/>*/}
                     <Details clicked={profileClick}>
                         <Name>
                             <h4>{values.userName}</h4>
