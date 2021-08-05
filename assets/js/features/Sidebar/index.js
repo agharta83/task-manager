@@ -7,13 +7,12 @@ import PowerOff from "../../img/power-off-solid.svg";
 // StyledComponent
 import {Container, SidebarContainer, Button, Logo, SlickBar, Item, Text, Profile, Details, Name, Logout} from "../../Theme/StyledComponents/Sidebar";
 import {AccountTree, CalendarToday, Description, Group, Home} from "@material-ui/icons";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
-import {isEmptyObject, UPLOADS_PATH} from "../../helpers/utils";
+import {UPLOADS_PATH} from "../../helpers/utils";
 import {Avatar as AvatarMUI} from "@material-ui/core";
-import {personalInfosSelector} from "../Profile/ProfileSlice";
-import {updatePersonalInfos} from "../Profile/profileThunk";
 import {useLogoutUserQuery} from "../Auth/AuthService";
+import {selectUserInfos} from "../Auth/AuthSlice";
 
 const tabsItem = [
     {
@@ -48,16 +47,16 @@ const Sidebar = () => {
     const [click, setClick] = useState(false);
     const [profileClick, setProfileClick] = useState(false);
     const [logoutUser] = useLogoutUserQuery();
-    const personalInfos = useSelector(personalInfosSelector);
-    const [values, setValues] = useState(personalInfos);
+    const userInfos = useSelector(selectUserInfos);
+    const [values, setValues] = useState(userInfos);
     const history = useHistory();
     const valuesRef = useRef();
 
     useEffect(() => {
-        if (!isEmptyObject(personalInfos)) {
-            setValues(personalInfos);
+        if (userInfos) {
+            setValues(userInfos);
         }
-    }, [personalInfos]);
+    }, [userInfos]);
 
     useEffect(() => {
         valuesRef.current = values;

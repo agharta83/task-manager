@@ -35,6 +35,7 @@ export const authSlice = createSlice({
 });
 
 export const { showForgotPasswordForm } = authSlice.actions;
-export const selectIsAuthenticated = (state) => state.auth.isAuthenticated
+export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
+export const selectUserInfos = (state) => state.auth.user;
 export const authSelector = (state) => state.auth;
 export default authSlice.reducer;
