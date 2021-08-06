@@ -11,8 +11,9 @@ import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import {UPLOADS_PATH} from "../../helpers/utils";
 import {Avatar as AvatarMUI} from "@material-ui/core";
-import {useLogoutUserQuery} from "../Auth/AuthService";
+import {useLogoutUserMutation} from "../Auth/AuthService";
 import {selectUserInfos} from "../Auth/AuthSlice";
+import StateCacheStorage from "../../helpers/StateCacheStorage";
 
 const tabsItem = [
     {
@@ -46,7 +47,7 @@ const tabsItem = [
 const Sidebar = () => {
     const [click, setClick] = useState(false);
     const [profileClick, setProfileClick] = useState(false);
-    const [logoutUser] = useLogoutUserQuery();
+    const [logoutUser] = useLogoutUserMutation();
     const userInfos = useSelector(selectUserInfos);
     const [values, setValues] = useState(userInfos);
     const history = useHistory();
@@ -68,6 +69,7 @@ const Sidebar = () => {
     const handleClickLogout = () => {
         logoutUser();
         history.push('/auth');
+        StateCacheStorage.clear("STATE_API");
     }
 
     return (

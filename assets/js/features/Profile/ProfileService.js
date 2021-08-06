@@ -3,7 +3,7 @@ import {axiosBaseQuery} from "../../helpers/apiCall";
 import {API_PROFILE} from "../../ApiConfig";
 
 export const profileApi = createApi({
-    reducerPath: 'profile',
+    reducerPath: 'profileApi',
     baseQuery: axiosBaseQuery({baseUrl: API_PROFILE}),
     endpoints: (builder) => ({
         getPersonalInfos: builder.query({

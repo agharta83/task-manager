@@ -10,7 +10,7 @@ const initialState = {
     forgotPassword: false,
 }
 
-export const authSlice = createSlice({
+const slice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
@@ -19,7 +19,6 @@ export const authSlice = createSlice({
 
             return state;
         },
-        logout: () => initialState,
     },
     extraReducers: (builder) => {
         builder
@@ -28,14 +27,16 @@ export const authSlice = createSlice({
                 state.user.userName = payload?.userName;
                 state.user.imagePath = payload?.imagePath;
             })
-            .addMatcher(authApi.endpoints.logoutUser.matchFulfilled, (state, action) => {
-                action.logout();
+            .addMatcher(authApi.endpoints.logoutUser.matchFulfilled, (state, {payload}) => {
+                state = initialState;
+
+                return state;
             })
     },
 });
 
-export const { showForgotPasswordForm } = authSlice.actions;
+export const { showForgotPasswordForm, logout } = slice.actions;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectUserInfos = (state) => state.auth.user;
 export const authSelector = (state) => state.auth;
-export default authSlice.reducer;
+export default slice.reducer;

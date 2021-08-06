@@ -15,18 +15,9 @@ const initialState = {
     subscription: {},
     privacy: {},
     settings: {},
-    global: {
-        isSuccess: false,
-        isFetching: false,
-        isError: false,
-        errorMessage: '',
-        loaded: {
-            personalInfo: false,
-        }
-    }
 }
 
-export const profileSlice = createSlice({
+const slice = createSlice({
     name: 'profile',
     initialState,
     reducers: {},
@@ -42,3 +33,4 @@ export const profileSlice = createSlice({
 });
 
 export const profileSelector = (state) => state.profile;
+export default slice.reducer;
