@@ -1,100 +1,42 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {loginUser, registerUser, resetPassword, sendMailForgotPassword} from "./authThunk";
+import {authApi} from "./AuthService";
 
-export const authSlice = createSlice({
-    name: 'auth',
-    initialState: {
-        email: '',
-        roles : [],
-        isAuthenticated: false,
-        forgotPassword : false,
-        isFetching: false,
-        isRegisterSuccess: false,
-        isLoginSuccess: false,
-        isSendMailSuccess: false,
-        isResetPasswordSuccess: false,
-        isError: false,
-        errorMessage: [],
+const initialState = {
+    user: {
+        userName: null,
+        imagePath: null,
     },
-    reducers: {
-        clearState: (state) => {
-            state.isError = false;
-            state.isRegisterSuccess = false;
-            state.isLoginSuccess = false;
-            state.isSendMailSuccess = false;
-            state.isResetPasswordSuccess = false;
-            state.isFetching = false;
+    isAuthenticated: false,
+    forgotPassword: false,
+}
 
-            return state;
-        },
+const slice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
         showForgotPasswordForm: (state) => {
             state.forgotPassword = true;
 
             return state;
         },
     },
-    extraReducers: {
-        [registerUser.fulfilled]: (state, { payload }) => {
-            state.isFetching = false;
-            state.isRegisterSuccess = true;
-            state.email = payload.email;
-        },
-        [registerUser.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [registerUser.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        },
-        [loginUser.fulfilled]: (state, {payload}) => {
-            state.email = payload.email;
-            state.roles = payload.roles;
-            state.isAuthenticated = true;
-            state.isFetching = false;
-            state.isLoginSuccess = true;
+    extraReducers: (builder) => {
+        builder
+            .addMatcher(authApi.endpoints.loginUser.matchFulfilled, (state, {payload}) => {
+                state.isAuthenticated = payload?.isLogged;
+                state.user.userName = payload?.userName;
+                state.user.imagePath = payload?.imagePath;
+            })
+            .addMatcher(authApi.endpoints.logoutUser.matchFulfilled, (state, {payload}) => {
+                state = initialState;
 
-            return state;
-        },
-        [loginUser.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [loginUser.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        },
-        [sendMailForgotPassword.fulfilled]: (state) => {
-            state.isSendMailSuccess = true;
-            state.isFetching = false;
-
-            return state;
-        },
-        [sendMailForgotPassword.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [sendMailForgotPassword.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        },
-        [resetPassword.fulfilled]: (state) => {
-            state.isResetPasswordSuccess = true;
-            state.isFetching = false;
-
-            return state;
-        },
-        [resetPassword.pending]: (state) => {
-            state.isFetching = true;
-        },
-        [resetPassword.rejected]: (state, {payload}) => {
-            state.isFetching = false;
-            state.isError = true;
-            state.errorMessage = payload;
-        }
+                return state;
+            })
     },
 });
 
-export const { clearState, showForgotPasswordForm } = authSlice.actions;
-
+export const { showForgotPasswordForm, logout } = slice.actions;
+export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
+export const selectUserInfos = (state) => state.auth.user;
 export const authSelector = (state) => state.auth;
+export default slice.reducer;

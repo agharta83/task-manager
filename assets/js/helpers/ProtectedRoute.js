@@ -3,6 +3,8 @@ import {Redirect, Route} from 'react-router-dom';
 import styled from "styled-components";
 import {AnimatePresence} from "framer-motion";
 import Sidebar from "../features/Sidebar";
+import {useSelector} from "react-redux";
+import {selectIsAuthenticated, selectUserInfos} from "../features/Auth/AuthSlice";
 
 const Pages = styled.div`
   width: 100vw;
@@ -19,14 +21,16 @@ const Pages = styled.div`
   }
 `;
 
-export function PrivateRoute({component: Component, ...rest}) {
-    const isAuth = localStorage.getItem('isLogged');
+const ProtectedRoute = ({redirectPath, component: Component, ...routeProps}) => {
+    const isAuth = useSelector(selectIsAuthenticated);
+    const user = useSelector(selectUserInfos);
+    const isAccessible = Boolean(user) && isAuth;
 
     return (
         <Route
-            {...rest}
+            {...routeProps}
             render={(props) =>
-                isAuth ?
+                isAccessible ?
                     <>
                         <Sidebar />
                         <Pages>
@@ -40,4 +44,6 @@ export function PrivateRoute({component: Component, ...rest}) {
             }
         />
     );
-}
+};
+
+export default ProtectedRoute;

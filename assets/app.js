@@ -4,7 +4,8 @@ import {render} from 'react-dom';
 import DefaultThemeProvider from "./js/Theme/DefaultThemeProvider";
 import {Toaster} from "react-hot-toast";
 import {Provider} from "react-redux";
-import store from "./js/Store/store";
+import {store} from "./js/Store/store";
+import {BrowserRouter as Router} from "react-router-dom";
 
 
 
@@ -13,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <DefaultThemeProvider>
             <Provider store={store}>
-                <App/>
+                <Router>
+                    <App/>
+                </Router>
                 <Toaster/>
             </Provider>
         </DefaultThemeProvider>

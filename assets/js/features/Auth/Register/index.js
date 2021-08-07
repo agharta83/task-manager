@@ -4,11 +4,10 @@ import {TextField} from 'mui-rff';
 import {AccountCircle, Lock as LockIcon, Visibility, VisibilityOff} from "@material-ui/icons";
 import TabPanel from "../../../Reusable/TabPanel";
 import {Form} from 'react-final-form';
-import {useDispatch, useSelector} from "react-redux";
-import {authSelector, clearState} from "../AuthSlice";
+import {useDispatch} from "react-redux";
 import {toast} from "react-hot-toast";
-import {registerUser} from "../authThunk";
 import {validateInputRegister} from "../../../helpers/InputsValidator";
+import {useRegisterUserMutation} from "../AuthService";
 
 const useStyles = makeStyles((theme) => ({
     padding: {
@@ -31,7 +30,7 @@ const RegisterForm = ({value}) => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
     const dispatch = useDispatch();
-    const {isFetching, isRegisterSuccess, isError, errorMessage} = useSelector(authSelector);
+    const [registerUser, { isLoading, isSuccess, isError, errorMessage }] = useRegisterUserMutation();
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -42,26 +41,18 @@ const RegisterForm = ({value}) => {
     };
 
     const mainHandleSubmit = data => {
-        dispatch(registerUser(data));
+        registerUser(data);
     };
 
     useEffect(() => {
-        return () => {
-            dispatch(clearState());
-        };
-    }, []);
-
-    useEffect(() => {
-        if (isRegisterSuccess) {
+        if (isSuccess) {
             toast.success('Un email d\'activation vous a été envoyé');
-            dispatch(clearState());
         }
 
         if (isError) {
             toast.error(errorMessage);
-            dispatch(clearState());
         }
-    }, [isRegisterSuccess, isError]);
+    }, [isSuccess, isError]);
 
     return (
         <TabPanel value={value} index="inscription">
@@ -113,10 +104,10 @@ const RegisterForm = ({value}) => {
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center" className={classes.padding}>
                             <Grid item className={classes.wrapper}>
-                                <Button variant="contained" color="secondary" type="submit" name="registration_form[submit]" disabled={submitting || isFetching}>
+                                <Button variant="contained" color="secondary" type="submit" name="registration_form[submit]" disabled={submitting || isLoading}>
                                     S'INSCRIRE
                                 </Button>
-                                {isFetching && <CircularProgress size={24} className={classes.buttonProgress} />}
+                                {isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
                             </Grid>
                         </Grid>
                     </form>

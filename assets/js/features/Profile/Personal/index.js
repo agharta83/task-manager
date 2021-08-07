@@ -3,15 +3,12 @@ import ProfileSettingBarHoc from "../../HOC/ProfileSettingBarHoc";
 import {Content, TabContent, TitleContent} from "../../../Theme/StyledComponents/Profile";
 import {Avatar as AvatarMUI, Button, FormControl, Grid, makeStyles} from "@material-ui/core";
 import InputBox from "../../../Reusable/InputBox";
-import {useDispatch, useSelector} from "react-redux";
-import {globalProfileSelector, personalInfosSelector} from "../ProfileSlice";
-import {isEmptyObject, isEmptyValueOfObject, UPLOADS_PATH} from "../../../helpers/utils";
+import {isEmptyObject, UPLOADS_PATH} from "../../../helpers/utils";
 import InputSwitch from "../../../Reusable/Switch";
-import {getPersonalInfo, updatePersonalInfos} from "../profileThunk";
 import Avatar from "react-avatar-edit";
 import {validateInputPersonalInfos} from "../../../helpers/InputsValidator";
 import {SpinnerLoader} from "../../../Reusable/SpinnerLoader";
-import {useInitialMount, usePrevious} from "../../../helpers/hooks";
+import {useGetPersonalInfosQuery, useUpdatePersonalInfosMutation} from "../ProfileService";
 
 const useStyles = makeStyles((theme) => ({
     margin: {
@@ -71,38 +68,24 @@ const fields = [
 
 const PersonalComponent = () => {
     const classes = useStyles();
-    const personalInfos = useSelector(personalInfosSelector);
-    const {isFetching, isSuccess, loaded} = useSelector(globalProfileSelector);
-    const [values, setValues] = useState(personalInfos);
+    const { data, isLoading, isFetching } = useGetPersonalInfosQuery(undefined, { refetchOnMountOrArgChange: true});
+    const [ updatePersonalInfos ] = useUpdatePersonalInfosMutation();
+    const [values, setValues] = useState(data);
     const [preview, setPreview] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
     const [errors, setErrors] = useState('');
     const valuesRef = useRef();
     const prevValues = useRef(); // Permet d'utiliser les valeurs précédents pour les comparer et update uniquement si elles ont été modifié (usePrevious custom hook retourne undefined ici)
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (!loaded.personalInfo) {
-            dispatch(getPersonalInfo());
-        }
-
-    }, []);
-
-    useEffect(() => {
-        if (isSuccess && !isEmptyObject(personalInfos)) {
-            setValues(personalInfos);
-            prevValues.current = personalInfos;
-        }
-    }, [personalInfos]);
 
     useEffect(() => {
         valuesRef.current = values;
     }, [values]);
 
+    // Run on unmount component to save data
     useEffect(() => {
         return () => {
             if (valuesRef.current !== prevValues.current) {
-                dispatch(updatePersonalInfos(valuesRef.current));
+                updatePersonalInfos(valuesRef.current);
             }
         }
     }, []);
@@ -211,7 +194,7 @@ const PersonalComponent = () => {
             <Content>
                 <TitleContent>Personal</TitleContent>
 
-                {isFetching ? (
+                {isLoading || isFetching ? (
                         <Grid container spacing={0} className={classes.spinner}>
                             <SpinnerLoader/>
                         </Grid>

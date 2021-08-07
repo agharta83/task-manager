@@ -1,9 +1,8 @@
 import React from "react";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {Route, Switch} from "react-router-dom";
 import Auth from "./features/Auth";
-import {PrivateRoute} from './helpers/PrivateRoute';
+import ProtectedRoute from './helpers/ProtectedRoute';
 import {Redirect} from "react-router";
-import {toast} from "react-hot-toast";
 import ResetPasswordForm from "./features/Auth/ResetPassword";
 import TasksList from "./features/TasksList";
 import Home from "./features/Home";
@@ -12,6 +11,37 @@ import Calender from "./features/Calender";
 import Documents from "./features/Documents";
 import Projects from "./features/Projects";
 import Profile from "./features/Profile";
+
+const privateUrlItems = [
+    {
+        path: "/home",
+        component: Home,
+    },
+    {
+        path: "/profile",
+        component: Profile,
+    },
+    {
+        path: "/team",
+        component: Team,
+    },
+    {
+        path: "/calender",
+        component: Calender,
+    },
+    {
+        path: "/documents",
+        component: Documents,
+    },
+    {
+        path: "/projects",
+        component: Projects,
+    },
+    {
+        path: "/taskslist",
+        component: TasksList,
+    },
+];
 
 function getEmailVerify() {
     let url = new URL(window.location.href);
@@ -22,30 +52,26 @@ function getEmailVerify() {
 }
 
 function App() {
-    const isAuth = localStorage.getItem('isLogged');
 
     if (getEmailVerify()) {
         toast.success('L\'adresse email a été vérifiée.');
     }
 
     return (
-        <Router>
-            <Switch>
-                {isAuth ? <PrivateRoute path="/home" component={Home} /> : <Route exact path="/auth" component={Auth} />}
+        <Switch>
+            {/*Redirect to auth*/}
+            <Redirect exact from="/" to="/auth"/>
 
-                <PrivateRoute path="/home" component={Home} />
-                <PrivateRoute path="/profile" component={Profile} />
-                <PrivateRoute path="/team" component={Team} />
-                <PrivateRoute path="/calender" component={Calender} />
-                <PrivateRoute path="/documents" component={Documents} />
-                <PrivateRoute path="/projects" component={Projects} />
-                <PrivateRoute path="/taskslist" component={TasksList} />
+            {/*Auth url*/}
+            <Route exact path="/auth" component={Auth}/>
+            <Route exact path="/user/reset-password" component={ResetPasswordForm}/>
 
-                <Route exact path="/auth" component={Auth} />
-                <Route exact path="/user/reset-password" component={ResetPasswordForm} />
-                <Redirect to="/auth" />
-            </Switch>
-        </Router>
+            {/*Protected url*/}
+            {privateUrlItems.map((item, index) => (
+                <ProtectedRoute key={index} path={item.path} component={item.component}/>
+            ))}
+
+        </Switch>
     );
 }
 

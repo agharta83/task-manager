@@ -1,10 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {makeStyles, Paper, Tabs, Tab, Grid} from "@material-ui/core";
 import LoginForm from "./Login";
 import RegisterForm from "./Register";
-import {toast} from "react-hot-toast";
-import {useSelector} from "react-redux";
-import {authSelector} from "./AuthSlice";
 import ForgotPasswordForm from "./ForgotPassword";
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +24,7 @@ export default function Auth() {
     const classes = useStyles();
     const [value, setValue] = useState('connexion');
     const [valueForReset, setValueForReset] = useState('forgotPassword');
-    const { forgotPassword } = useSelector(authSelector);
+    const { forgotPassword } = false;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
