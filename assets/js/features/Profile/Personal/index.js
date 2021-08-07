@@ -68,21 +68,14 @@ const fields = [
 
 const PersonalComponent = () => {
     const classes = useStyles();
-    const { data: personalInfos, isLoading, isSuccess } = useGetPersonalInfosQuery();
+    const { data, isLoading, isFetching } = useGetPersonalInfosQuery(undefined, { refetchOnMountOrArgChange: true});
     const [ updatePersonalInfos ] = useUpdatePersonalInfosMutation();
-    const [values, setValues] = useState(personalInfos);
+    const [values, setValues] = useState(data);
     const [preview, setPreview] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
     const [errors, setErrors] = useState('');
     const valuesRef = useRef();
     const prevValues = useRef(); // Permet d'utiliser les valeurs précédents pour les comparer et update uniquement si elles ont été modifié (usePrevious custom hook retourne undefined ici)
-
-    useEffect(() => {
-        if (isSuccess && !isEmptyObject(personalInfos)) {
-            setValues(personalInfos);
-            prevValues.current = personalInfos;
-        }
-    }, [personalInfos]);
 
     useEffect(() => {
         valuesRef.current = values;
@@ -201,7 +194,7 @@ const PersonalComponent = () => {
             <Content>
                 <TitleContent>Personal</TitleContent>
 
-                {isLoading ? (
+                {isLoading || isFetching ? (
                         <Grid container spacing={0} className={classes.spinner}>
                             <SpinnerLoader/>
                         </Grid>

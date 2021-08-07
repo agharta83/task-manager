@@ -2,15 +2,6 @@ import {createSlice} from "@reduxjs/toolkit";
 import {profileApi} from "./ProfileService";
 
 const initialState = {
-    personalInfo: {
-        userName: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        isActif: '',
-        imagePath: '',
-    },
     payment: {},
     subscription: {},
     privacy: {},
