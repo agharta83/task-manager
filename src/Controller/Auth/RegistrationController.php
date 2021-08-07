@@ -6,7 +6,6 @@ use App\Controller\BaseController;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
-use App\Security\LoginAuthenticator;
 use DateTime;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends BaseController
@@ -32,13 +30,11 @@ class RegistrationController extends BaseController
     /**
      * @Route("/api/user/register", name="app_register", methods={"POST"})
      * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param GuardAuthenticatorHandler $guardHandler
-     * @param LoginAuthenticator $authenticator
+     * @param UserPasswordHasherInterface $passwordEncoder
      * @return Response
      * @throws TransportExceptionInterface
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginAuthenticator $authenticator): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -63,7 +59,7 @@ class RegistrationController extends BaseController
 
         // encode the plain password
         $user->setPassword(
-            $passwordEncoder->encodePassword(
+            $passwordEncoder->hashPassword(
                 $user,
                 $form->get('plainPassword')->getData()
             )
@@ -83,13 +79,6 @@ class RegistrationController extends BaseController
                 ->to($user->getEmail())
                 ->subject('Confirmation adresse email')
                 ->htmlTemplate('registration/confirmation_email.html.twig')
-        );
-
-        $guardHandler->authenticateUserAndHandleSuccess(
-            $user,
-            $request,
-            $authenticator,
-            'main'
         );
 
         return $this->createApiResponse($user->getEmail(), 200);
