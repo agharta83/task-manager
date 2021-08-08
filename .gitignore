@@ -25,3 +25,6 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 .idea
+/README_PERSO.md
+/composer.lock
+/public/uploads/38/60fb49ccd0b5a.png

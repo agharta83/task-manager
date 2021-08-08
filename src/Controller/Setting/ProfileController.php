@@ -26,6 +26,7 @@ class ProfileController extends BaseController
      * @Route("/api/profile/personal", name="app_profile_personal", methods={"GET"})
      * @return Response
      * @throws Exception
+     * @IsGranted("ROLE_USER", statusCode=404, message="Unauthorized access !")
      */
     public function getPersonalInfo(): Response
     {
@@ -51,6 +52,7 @@ class ProfileController extends BaseController
      * @param Request $request
      * @return Response
      * @throws Exception
+     * @IsGranted("ROLE_USER", statusCode=404, message="Unauthorized access !")
      */
     public function updatePersonalInfo(Request $request): Response
     {
