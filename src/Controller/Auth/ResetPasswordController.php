@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
@@ -100,11 +101,11 @@ class ResetPasswordController extends BaseController
      *
      * @Route("/reset/{token}", name="app_reset_password")
      * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param UserPasswordHasherInterface $passwordHasher
      * @param string|null $token
      * @return Response
      */
-    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, string $token = null): Response
+    public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, string $token = null): Response
     {
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
@@ -165,10 +166,10 @@ class ResetPasswordController extends BaseController
      *
      * @Route("/reset-form", name="reset_password_form")
      * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param UserPasswordHasherInterface $passwordHasher
      * @return Response
      */
-    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function resetPassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         $token = $this->getTokenFromSession();
         if (null === $token) {
@@ -196,12 +197,12 @@ class ResetPasswordController extends BaseController
         $this->resetPasswordHelper->removeResetRequest($token);
 
         // Encode the plain password, and set it.
-        $encodedPassword = $passwordEncoder->encodePassword(
+        $hashedPassword = $passwordHasher->hashPassword(
             $user,
             $data->plainPassword
         );
 
-        $user->setPassword($encodedPassword);
+        $user->setPassword($hashedPassword);
         $this->getDoctrine()->getManager()->flush();
 
         // The session is cleaned up after the password has been changed.

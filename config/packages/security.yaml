@@ -1,5 +1,6 @@
 security:
-    encoders:
+    enable_authenticator_manager: true
+    password_hashers:
         App\Entity\User:
             algorithm: auto
 
@@ -15,16 +16,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
             lazy: true
             provider: app_user_provider
             json_login:
                 check_path: /api/user/login
                 username_path: email
                 password_path: password
-            guard:
-                authenticators:
-                    - App\Security\LoginAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -39,5 +36,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        # allow unauthenticated users to access the login form
+        - { path: ^/api/profile/, roles: PUBLIC_ACCESS }
+
+        # but require authentication for all other admin routes
         # - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/api/profile/, roles: ROLE_USER }

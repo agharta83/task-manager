@@ -3,48 +3,50 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="Un compte est déjà lié à cet email.")
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $email;
+    private ?string $email;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateCreate;
+    private ?DateTimeInterface $dateCreate;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isActif;
+    private ?bool $isActif;
 
     /**
      * @ORM\Column(type="string", length=75)
@@ -54,17 +56,17 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=75, nullable=true)
      */
-    private $firstname;
+    private ?string $firstname;
 
     /**
      * @ORM\Column(type="string", length=75, nullable=true)
      */
-    private $lastname;
+    private ?string $lastname;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -112,6 +114,14 @@ class User implements UserInterface
      * A visual identifier that represents this user.
      *
      * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
     public function getUsername(): string
     {
@@ -172,12 +182,12 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getDateCreate(): ?\DateTimeInterface
+    public function getDateCreate(): ?DateTimeInterface
     {
         return $this->dateCreate;
     }
 
-    public function setDateCreate(\DateTimeInterface $dateCreate): self
+    public function setDateCreate(DateTimeInterface $dateCreate): self
     {
         $this->dateCreate = $dateCreate;
 
@@ -261,4 +271,8 @@ class User implements UserInterface
     }
 
 
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement @method string getUserIdentifier()
+    }
 }

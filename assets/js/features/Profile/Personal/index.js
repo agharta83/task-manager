@@ -68,14 +68,21 @@ const fields = [
 
 const PersonalComponent = () => {
     const classes = useStyles();
-    const { data, isLoading, isFetching } = useGetPersonalInfosQuery(undefined, { refetchOnMountOrArgChange: true});
+    const { data, isLoading, isFetching, isSuccess } = useGetPersonalInfosQuery(undefined, { refetchOnMountOrArgChange: true});
     const [ updatePersonalInfos ] = useUpdatePersonalInfosMutation();
     const [values, setValues] = useState(data);
     const [preview, setPreview] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
     const [errors, setErrors] = useState('');
-    const valuesRef = useRef();
-    const prevValues = useRef(); // Permet d'utiliser les valeurs précédents pour les comparer et update uniquement si elles ont été modifié (usePrevious custom hook retourne undefined ici)
+    const valuesRef = useRef(values); // Permet de recupérer les values à update lors de l'event unmount
+    const prevValues = useRef(data); // Permet d'utiliser les valeurs précédents pour les comparer et update uniquement si elles ont été modifié (usePrevious custom hook retourne undefined ici)
+
+    useEffect(() => {
+        if (isSuccess && !isLoading && !isFetching) {
+            setValues(data);
+            valuesRef.current = values;
+        }
+    }, [isSuccess, isLoading, isFetching]);
 
     useEffect(() => {
         valuesRef.current = values;
