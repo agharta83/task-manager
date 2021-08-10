@@ -1,13 +1,10 @@
-import React from 'react';
-import clsx from 'clsx';
+import React, {useState} from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 
 const useStyles = makeStyles((theme) => ({
@@ -39,61 +36,43 @@ const MenuProps = {
     },
 };
 
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
-
-function getStyles(name, personName, theme) {
+function getStyles(title, value, theme) {
     return {
         fontWeight:
-            personName.indexOf(name) === -1
+            value.indexOf(title) === -1
                 ? theme.typography.fontWeightRegular
                 : theme.typography.fontWeightMedium,
     };
 }
 
 export default function MultipleSelect(props) {
-    const {label} = props;
+    const {label, datas} = props;
     const classes = useStyles();
     const theme = useTheme();
-    const [personName, setPersonName] = React.useState([]);
+    const [value, setValue] = useState("");
 
     const handleChange = (event) => {
-        setPersonName(event.target.value);
+        setValue(event.target.value);
     };
 
     return (
         <div>
             <FormControl className={classes.formControl}>
-                <InputLabel id="demo-mutiple-chip-label">{label}</InputLabel>
+                <InputLabel id="demo-chip-label">{label}</InputLabel>
                 <Select
-                    // labelId="demo-mutiple-chip-label"
-                    // id="demo-mutiple-chip"
-                    multiple
-                    value={personName}
+                    value={value}
                     onChange={handleChange}
-                    input={<Input id="select-multiple-chip" />}
+                    input={<Input id="demo-chip"/>}
                     renderValue={(selected) => (
                         <div className={classes.chips}>
-                            {selected.map((value) => (
-                                <Chip key={value} label={value} className={classes.chip} />
-                            ))}
+                            <Chip key={value} label={value} className={classes.chip} />
                         </div>
                     )}
                     MenuProps={MenuProps}
                 >
-                    {names.map((name) => (
-                        <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
-                            {name}
+                    {datas.map((data) => (
+                        <MenuItem key={data.title} value={data.title} style={getStyles(data.title, value, theme)}>
+                            {data.title}
                         </MenuItem>
                     ))}
                 </Select>

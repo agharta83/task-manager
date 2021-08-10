@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MaterialUIPickers(props) {
     const classes = useStyles();
-    const {label} = props;
-    const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+    const {date} = props;
+    const [selectedDate, setSelectedDate] = React.useState(date);
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -30,10 +30,8 @@ export default function MaterialUIPickers(props) {
                     size="small"
                     disableToolbar
                     variant="inline"
-                    format="MM/dd/yyyy"
+                    format="dd/MM/yyyy"
                     margin="normal"
-                    // id="date-picker-inline"
-                    // label={label}
                     value={selectedDate}
                     onChange={handleDateChange}
                     KeyboardButtonProps={{

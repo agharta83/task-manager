@@ -18,8 +18,6 @@ export default function TimePickers(props) {
     return (
         <form className={classes.container} noValidate>
             <TextField
-                // id="time"
-                // label="Alarm clock"
                 type="time"
                 defaultValue="07:30"
                 className={classes.textField}
