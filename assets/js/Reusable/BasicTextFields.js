@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BasicTextFields(props) {
-    const {label, placeholder, multiline, rows, rowsMax} = props;
+    const {label, placeholder, multiline, rows, rowsMax, inputWidth} = props;
     const classes = useStyles();
 
     return (
-        <form className={classes.root} noValidate autoComplete="off">
+        <form className={inputWidth} noValidate autoComplete="off">
             <TextField
                 label={label}
                 placeholder={placeholder}

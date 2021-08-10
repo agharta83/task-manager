@@ -7,8 +7,8 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexWrap: 'wrap',
     },
-    fontSize: {
-        fontSize: '2em',
+    timeInput: {
+        fontSize: '0.8em',
     },
 }));
 
@@ -28,7 +28,9 @@ export default function TimePickers(props) {
                 }}
                 inputProps={{
                     step: 300, // 5 min
-                    classes: { input: classes.fontSize }
+                }}
+                InputProps={{
+                    classes: {input: classes.timeInput}
                 }}
             />
         </form>
