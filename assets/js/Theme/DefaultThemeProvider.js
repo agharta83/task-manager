@@ -1,12 +1,12 @@
 //REACT
 import React from 'react';
 //MUI COMPONENTS
-import {createMuiTheme, CssBaseline, MuiThemeProvider, responsiveFontSizes} from '@material-ui/core';
+import {createTheme, CssBaseline, MuiThemeProvider, responsiveFontSizes} from '@material-ui/core';
 //MUI COLORS
 import {green, red} from '@material-ui/core/colors';
 import deepPurple from "@material-ui/core/colors/deepPurple";
 
-const theme = createMuiTheme({
+const theme = createTheme({
     overrides: {
         MuiCssBaseline: {
             '@global': {
