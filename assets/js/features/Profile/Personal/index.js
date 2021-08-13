@@ -76,6 +76,12 @@ const PersonalComponent = () => {
     const [errors, setErrors] = useState('');
     const valuesRef = useRef(values); // Permet de recupérer les values à update lors de l'event unmount
     const prevValues = useRef(data); // Permet d'utiliser les valeurs précédents pour les comparer et update uniquement si elles ont été modifié (usePrevious custom hook retourne undefined ici)
+    const [readOnly, setReadOnly] = useState({
+        userName: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+    });
 
     useEffect(() => {
         if (isSuccess && !isLoading && !isFetching) {
@@ -96,13 +102,6 @@ const PersonalComponent = () => {
             }
         }
     }, []);
-
-    const [readOnly, setReadOnly] = useState({
-        userName: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-    });
 
     const handleReadOnly = (prop) => () => {
 

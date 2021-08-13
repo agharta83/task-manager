@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
     Accordion,
     AccordionActions,
@@ -19,6 +19,7 @@ import DatePickers from "../../Reusable/DatePickers";
 import TimePickers from "../../Reusable/TimePickers";
 import SelectChip from "../../Reusable/SelectChip";
 import SelectMultipleChip from "../../Reusable/SelectMultipleChip";
+import {useGetCategoriesListQuery} from "./TasksService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,20 +61,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // TODO render dynamicly
-const categoriesList = [
-    {
-        title: 'Marketing'
-    },
-    {
-        title: 'Design'
-    },
-    {
-        title: 'Development'
-    },
-    {
-        title: 'Management'
-    },
-];
+// const categoriesList = [
+//     {
+//         title: 'Marketing'
+//     },
+//     {
+//         title: 'Design'
+//     },
+//     {
+//         title: 'Development'
+//     },
+//     {
+//         title: 'Management'
+//     },
+// ];
 
 // TODO render dynamicly
 const statusList = [
@@ -103,6 +104,15 @@ const statusList = [
 
 const AddTask = () => {
     const classes = useStyles();
+    const {data, isLoading, isFetching, isSuccess} = useGetCategoriesListQuery(undefined, { refetchOnMountOrArgChange: true});
+    const [ categoriesList, setCategoriesList ] = useState([]);
+
+    useEffect(() => {
+        if (isSuccess) {
+            setCategoriesList(data);
+        }
+    }, [isSuccess])
+
 
     return (
 
