@@ -1,14 +1,21 @@
 import {createApi} from "@reduxjs/toolkit/dist/query/react";
 import {axiosBaseQuery} from "../../helpers/apiCall";
-import {API_CATEGORY} from "../../ApiConfig";
+import {API_TASKS} from "../../ApiConfig";
 
 export const tasksApi = createApi({
-    reducerPath: 'profileApi',
-    baseQuery: axiosBaseQuery({baseUrl: API_CATEGORY}),
+    reducerPath: 'tasksApi',
+    baseQuery: axiosBaseQuery({baseUrl: API_TASKS}),
+    keepUnusedDataFor: 0,
     endpoints: (builder) => ({
         getCategoriesList: builder.query({
             query: () => ({
-                url: 'list',
+                url: 'list-categories',
+                method: 'get',
+            }),
+        }),
+        getStatusList: builder.query({
+            query: () => ({
+                url: 'list-status',
                 method: 'get',
             }),
         }),
@@ -17,4 +24,5 @@ export const tasksApi = createApi({
 
 export const {
     useGetCategoriesListQuery,
+    useGetStatusListQuery,
 } = tasksApi;

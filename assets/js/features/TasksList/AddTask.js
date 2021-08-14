@@ -19,7 +19,7 @@ import DatePickers from "../../Reusable/DatePickers";
 import TimePickers from "../../Reusable/TimePickers";
 import SelectChip from "../../Reusable/SelectChip";
 import SelectMultipleChip from "../../Reusable/SelectMultipleChip";
-import {useGetCategoriesListQuery} from "./TasksService";
+import {useGetCategoriesListQuery, useGetStatusListQuery} from "./TasksService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -77,41 +77,42 @@ const useStyles = makeStyles((theme) => ({
 // ];
 
 // TODO render dynamicly
-const statusList = [
-    {
-        title: 'Approved'
-    },
-    {
-        title: 'In Progress'
-    },
-    {
-        title: 'In Review'
-    },
-    {
-        title: 'Waiting'
-    },
-    {
-        title: 'Done'
-    },
-    {
-        title: 'Deleted'
-    },
-    {
-        title: 'Convert to project'
-    },
-
-];
+// const test = [
+//     {
+//         title: 'Approved' //
+//     },
+//     {
+//         title: 'In Progress' //
+//     },
+//     {
+//         title: 'In Review' //
+//     },
+//     {
+//         title: 'Waiting' //
+//     },
+//     {
+//         title: 'Done' //
+//     },
+//     {
+//         title: 'Deleted' //
+//     },
+//     {
+//         title: 'Convert to project' //
+//     },
+//
+// ];
 
 const AddTask = () => {
     const classes = useStyles();
-    const {data, isLoading, isFetching, isSuccess} = useGetCategoriesListQuery(undefined, { refetchOnMountOrArgChange: true});
+    const {data: categories, isLoading: isCategoriesLoading, isSuccess: isCategoriesSuccess} = useGetCategoriesListQuery(undefined, { refetchOnMountOrArgChange: true});
+    const {data: status, isLoading: isStatusListLoading, isSuccess: isStatusListSuccess} = useGetStatusListQuery(undefined, { refetchOnMountOrArgChange: true});
     const [ categoriesList, setCategoriesList ] = useState([]);
+    const [ statusList, setStatusList ] = useState([]);
 
     useEffect(() => {
-        if (isSuccess) {
-            setCategoriesList(data);
-        }
-    }, [isSuccess])
+        if (isCategoriesSuccess) setCategoriesList(categories);
+        if (isStatusListSuccess) setStatusList(status);
+    }, [isCategoriesSuccess, isStatusListSuccess])
 
 
     return (
@@ -177,13 +178,13 @@ const AddTask = () => {
                 <AccordionDetails className={classes.details}>
                     <Grid container className={classes.selectContainer}>
                         <Grid item>
-                            <SelectMultipleChip label="Category" datas={categoriesList}/>
+                            <SelectMultipleChip label="Category" datas={categoriesList} isLoading={isCategoriesLoading}/>
                         </Grid>
                     </Grid>
                     <div className={clsx(classes.column, classes.helper)}>
                         <Grid container>
                             <Grid item>
-                                <SelectChip label="Status" datas={statusList}/>
+                                <SelectChip label="Status" datas={statusList} isLoading={isStatusListLoading}/>
                             </Grid>
                         </Grid>
                     </div>
