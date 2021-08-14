@@ -19,7 +19,7 @@ import DatePickers from "../../Reusable/DatePickers";
 import TimePickers from "../../Reusable/TimePickers";
 import SelectChip from "../../Reusable/SelectChip";
 import SelectMultipleChip from "../../Reusable/SelectMultipleChip";
-import {useGetCategoriesListQuery, useGetStatusListQuery} from "./TasksService";
+import {useAddTodoMutation, useGetCategoriesListQuery, useGetStatusListQuery} from "./TasksService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,59 +60,39 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-// TODO render dynamicly
-// const categoriesList = [
-//     {
-//         title: 'Marketing'
-//     },
-//     {
-//         title: 'Design'
-//     },
-//     {
-//         title: 'Development'
-//     },
-//     {
-//         title: 'Management'
-//     },
-// ];
-
-// TODO render dynamicly
-// const test = [
-//     {
-//         title: 'Approved' //
-//     },
-//     {
-//         title: 'In Progress' //
-//     },
-//     {
-//         title: 'In Review' //
-//     },
-//     {
-//         title: 'Waiting' //
-//     },
-//     {
-//         title: 'Done' //
-//     },
-//     {
-//         title: 'Deleted' //
-//     },
-//     {
-//         title: 'Convert to project' //
-//     },
-//
-// ];
+const initialValues = {
+    title: '',
+    description: '',
+    note: '',
+}
 
 const AddTask = () => {
     const classes = useStyles();
-    const {data: categories, isLoading: isCategoriesLoading, isSuccess: isCategoriesSuccess} = useGetCategoriesListQuery(undefined, { refetchOnMountOrArgChange: true});
-    const {data: status, isLoading: isStatusListLoading, isSuccess: isStatusListSuccess} = useGetStatusListQuery(undefined, { refetchOnMountOrArgChange: true});
-    const [ categoriesList, setCategoriesList ] = useState([]);
-    const [ statusList, setStatusList ] = useState([]);
+    const {data: categories, isLoading: isCategoriesLoading, isSuccess: isCategoriesSuccess} = useGetCategoriesListQuery(undefined, {refetchOnMountOrArgChange: true});
+    const {data: status, isLoading: isStatusListLoading, isSuccess: isStatusListSuccess} = useGetStatusListQuery(undefined, {refetchOnMountOrArgChange: true});
+    const [ addTodo ] = useAddTodoMutation();
+    const [categoriesList, setCategoriesList] = useState([]);
+    const [statusList, setStatusList] = useState([]);
+    const [values, setValues] = useState(initialValues);
 
     useEffect(() => {
         if (isCategoriesSuccess) setCategoriesList(categories);
         if (isStatusListSuccess) setStatusList(status);
-    }, [isCategoriesSuccess, isStatusListSuccess])
+    }, [isCategoriesSuccess, isStatusListSuccess]);
+
+    const handleInputChange = (event) => {
+        const {name, value} = event.target;
+
+        setValues({
+            ...values,
+            [name]: value
+        });
+    };
+
+    const onSaveTask = () => {
+        addTodo(values);
+        setValues(initialValues);
+    }
 
 
     return (
@@ -127,26 +107,33 @@ const AddTask = () => {
                     <div className={classes.column}>
                         <Typography className={classes.heading}>Add new task</Typography>
                     </div>
-                    <BasicTextFields placeholder="Task title" inputWidth={classes.primaryInputWidth}/>
+                    <BasicTextFields name="title" placeholder="Task title" inputWidth={classes.primaryInputWidth}
+                                     values={values.title} onChange={handleInputChange}/>
                 </AccordionSummary>
                 <AccordionDetails className={classes.details}>
                     <Grid container className={classes.gridInputContainer}>
                         <Grid item>
                             <BasicTextFields
+                                name="description"
                                 placeholder="Task description"
                                 multiline={true}
                                 rows={1}
                                 rowsMax={4}
                                 inputWidth={classes.secondaryInputWidth}
+                                values={values.description}
+                                onChange={handleInputChange}
                             />
                         </Grid>
                         <Grid item>
                             <BasicTextFields
+                                name="note"
                                 placeholder="Note"
                                 multiline={true}
                                 rows={1}
                                 rowsMax={2}
                                 inputWidth={classes.secondaryInputWidth}
+                                values={values.note}
+                                onChange={handleInputChange}
                             />
                         </Grid>
                     </Grid>
@@ -207,9 +194,7 @@ const AddTask = () => {
                         <WhatshotIcon/>
                     </IconButton>
                     <Button size="small">Cancel</Button>
-                    <Button size="small" color="primary">
-                        Save
-                    </Button>
+                    <Button size="small" color="primary" onClick={onSaveTask}>Save</Button>
                 </AccordionActions>
             </Accordion>
         </div>

@@ -47,9 +47,15 @@ class Todo
     private $state;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="todos")
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="todos", cascade={"persist"})
      */
     private Collection $category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="todos")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private ?User $user;
 
     public function __construct()
     {
@@ -147,5 +153,17 @@ class Todo
     public function setState($state): void
     {
         $this->state = $state;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

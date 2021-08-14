@@ -81,9 +81,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $categories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Todo::class, mappedBy="user", orphanRemoval=true)
+     */
+    private Collection $todos;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->todos = new ArrayCollection();
     }
 
     /**
@@ -313,6 +319,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($category->getUserId() === $this) {
                 $category->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Todo[]
+     */
+    public function getTodos(): Collection
+    {
+        return $this->todos;
+    }
+
+    public function addTodo(Todo $todo): self
+    {
+        if (!$this->todos->contains($todo)) {
+            $this->todos[] = $todo;
+            $todo->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTodo(Todo $todo): self
+    {
+        if ($this->todos->removeElement($todo)) {
+            // set the owning side to null (unless already changed)
+            if ($todo->getUser() === $this) {
+                $todo->setUser(null);
             }
         }
 

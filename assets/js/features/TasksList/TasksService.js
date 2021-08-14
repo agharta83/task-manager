@@ -19,10 +19,18 @@ export const tasksApi = createApi({
                 method: 'get',
             }),
         }),
+        addTodo: builder.mutation({
+            query: ({ ...values }) => ({
+                url: 'create',
+                method: 'post',
+                data: JSON.stringify(values),
+            })
+        })
     }),
 });
 
 export const {
     useGetCategoriesListQuery,
     useGetStatusListQuery,
+    useAddTodoMutation,
 } = tasksApi;

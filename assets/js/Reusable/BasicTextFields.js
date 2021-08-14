@@ -3,16 +3,19 @@ import TextField from '@material-ui/core/TextField';
 
 
 export default function BasicTextFields(props) {
-    const {label, placeholder, multiline, rows, rowsMax, inputWidth} = props;
+    const {name, label, placeholder, multiline, rows, rowsMax, inputWidth, value, onChange} = props;
 
     return (
         <form className={inputWidth} noValidate autoComplete="off">
             <TextField
+                name={name}
                 label={label}
                 placeholder={placeholder}
                 multiline={multiline}
                 minRows={rows}
                 maxRows={rowsMax}
+                value={value}
+                onChange={onChange}
             />
         </form>
     );
