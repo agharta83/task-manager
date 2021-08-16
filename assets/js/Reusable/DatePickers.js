@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MaterialUIPickers(props) {
     const classes = useStyles();
-    const {date} = props;
+    const {date, disabled} = props;
     const [selectedDate, setSelectedDate] = React.useState(date);
 
     const handleDateChange = (date) => {
@@ -27,6 +27,7 @@ export default function MaterialUIPickers(props) {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container justifyContent="space-around">
                 <KeyboardDatePicker
+                    disabled={disabled}
                     size="small"
                     disableToolbar
                     variant="inline"

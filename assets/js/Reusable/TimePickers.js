@@ -13,13 +13,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TimePickers(props) {
+    const {disabled} = props;
     const classes = useStyles();
 
     return (
         <form className={classes.container} noValidate>
             <TextField
+                disabled={disabled}
                 type="time"
-                defaultValue="07:30"
+                defaultValue="08:30"
                 className={classes.textField}
                 InputLabelProps={{
                     shrink: true,

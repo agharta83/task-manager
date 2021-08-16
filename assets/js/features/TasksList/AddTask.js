@@ -9,7 +9,9 @@ import {
     Grid,
     IconButton,
     makeStyles,
-    Typography
+    Typography,
+    FormControlLabel,
+    Checkbox
 } from "@material-ui/core";
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -55,8 +57,15 @@ const useStyles = makeStyles((theme) => ({
     },
     secondaryInputWidth: {
         '& > *': {
-            width: '25ch',
+            width: '52ch',
         }
+    },
+    noMargin: {
+        margin: '0px',
+    },
+    noMarginExpanded: {
+        margin: '0px',
+        maxHeight: '48px',
     }
 }));
 
@@ -66,6 +75,7 @@ const initialValues = {
     note: '',
     status: '',
     categories: [],
+    scheduled : false,
 }
 
 const AddTask = () => {
@@ -76,6 +86,7 @@ const AddTask = () => {
     const [categoriesList, setCategoriesList] = useState([]);
     const [statusList, setStatusList] = useState([]);
     const [values, setValues] = useState(initialValues);
+    // const [disabled, setDisabled] = useState(true);
 
     useEffect(() => {
         if (isCategoriesSuccess) setCategoriesList(categories);
@@ -90,6 +101,15 @@ const AddTask = () => {
             [name]: value
         });
     };
+
+    const handleCheckboxChange = (event) => {
+        const {name, checked} = event.target;
+
+        setValues({
+            ...values,
+            [name]: checked
+        });
+    }
 
     const onSaveTask = () => {
         addTodo(values);
@@ -139,15 +159,38 @@ const AddTask = () => {
                             />
                         </Grid>
                     </Grid>
-                    <div className={clsx(classes.column, classes.helper)}>
+
+                </AccordionDetails>
+
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-label="Expand"
+                        aria-controls="additional-actions1-content"
+                        id="additional-actions1-header"
+                        classes={{
+                            content: classes.noMargin,
+                        }}
+                    >
+                        <FormControlLabel
+                            aria-label="Acknowledge"
+                            onClick={(event) => event.stopPropagation()}
+                            onFocus={(event) => event.stopPropagation()}
+                            control={<Checkbox name="scheduled" checked={values.scheduled} onChange={handleCheckboxChange}/>}
+                            label="Schedule a due"
+                        />
+                    </AccordionSummary>
+                    <AccordionDetails>
+
                         <Grid container spacing={1}>
+
                             <Grid item xs={4} className={classes.align}>
                                 <Typography variant="caption">
                                     Select date
                                 </Typography>
                             </Grid>
-                            <Grid item xs={8}>
-                                <DatePickers date={new Date()}/>
+                            <Grid item xs={7} className={classes.align}>
+                                <DatePickers date={new Date()} disabled={!values.scheduled}/>
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}>
@@ -156,18 +199,21 @@ const AddTask = () => {
                                     Select hours
                                 </Typography>
                             </Grid>
-                            <Grid item xs={6}>
-                                <TimePickers/>
+                            <Grid item xs={6} className={classes.align}>
+                                <TimePickers disabled={!values.scheduled}/>
                             </Grid>
 
                         </Grid>
-                    </div>
-                </AccordionDetails>
+
+                    </AccordionDetails>
+                </Accordion>
 
                 <AccordionDetails className={classes.details}>
                     <Grid container className={classes.selectContainer}>
                         <Grid item>
-                            <SelectMultipleChip values={values.categories} name="categories" label="Category" datas={categoriesList} isLoading={isCategoriesLoading} onChange={handleChange}/>
+                            <SelectMultipleChip values={values.categories} name="categories" label="Category"
+                                                datas={categoriesList} isLoading={isCategoriesLoading}
+                                                onChange={handleChange}/>
                         </Grid>
                     </Grid>
                     <div className={clsx(classes.column, classes.helper)}>
