@@ -76,6 +76,8 @@ const initialValues = {
     status: '',
     categories: [],
     scheduled : false,
+    selectedDate: new Date(),
+    selectedTime: '08:30',
 }
 
 const AddTask = () => {
@@ -86,7 +88,7 @@ const AddTask = () => {
     const [categoriesList, setCategoriesList] = useState([]);
     const [statusList, setStatusList] = useState([]);
     const [values, setValues] = useState(initialValues);
-    // const [disabled, setDisabled] = useState(true);
+    // const [selectedDate, setSelectedDate] = React.useState(date);
 
     useEffect(() => {
         if (isCategoriesSuccess) setCategoriesList(categories);
@@ -111,7 +113,23 @@ const AddTask = () => {
         });
     }
 
+    const handleDateChange = (date) => {
+        setValues({
+            ...values,
+            selectedDate: date,
+        });
+    };
+
     const onSaveTask = () => {
+        // TODO refacto this method to generic and reuse in other component
+        const date = values.selectedDate;
+        const [month, day, year] = [date.getMonth() + 1, date.getDate(), date.getFullYear()]; // Because getMonth methods begin at index 0
+
+        setValues({
+            ...values,
+            selectedDate: year + '-' + month + '-' + day,
+        })
+
         addTodo(values);
         setValues(initialValues);
     }
@@ -190,7 +208,7 @@ const AddTask = () => {
                                 </Typography>
                             </Grid>
                             <Grid item xs={7} className={classes.align}>
-                                <DatePickers date={new Date()} disabled={!values.scheduled}/>
+                                <DatePickers name="selectedDate" date={values.selectedDate} disabled={!values.scheduled} onChange={handleDateChange}/>
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}>
@@ -200,7 +218,7 @@ const AddTask = () => {
                                 </Typography>
                             </Grid>
                             <Grid item xs={6} className={classes.align}>
-                                <TimePickers disabled={!values.scheduled}/>
+                                <TimePickers name="selectedTime" disabled={!values.scheduled} defaultValue={values.seletedTime} onChange={handleChange}/>
                             </Grid>
 
                         </Grid>
