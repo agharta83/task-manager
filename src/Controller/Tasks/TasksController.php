@@ -59,10 +59,11 @@ class TasksController extends BaseController
     /**
      * @Route("/api/tasks/create", name="app_tasks_create", methods={"POST"})
      * @param Request $request
+     * @param CategoryRepository $categoryRepository
      * @return Response
      * @IsGranted("ROLE_USER", statusCode=404, message="Unauthorized access !")
      */
-    public function createTodo(Request $request): Response
+    public function createTodo(Request $request, CategoryRepository $categoryRepository): Response
     {
         $datas = json_decode($request->getContent(), true);;
 
@@ -77,20 +78,28 @@ class TasksController extends BaseController
             $todo->setDescription($datas['description']);
             $todo->setNote($datas['note']);
             $todo->setDateCreate(new DateTime('now'));
-            $todo->setState(TodoStateType::WAITING); // TODO state
 
-            $newCategory = new Category(); // TODO Categories array !!
-            $newCategory->setUser($user);
-            $newCategory->setName('Development');
-            $newCategory->addTodo($todo);
+            // STATE
+            foreach (TodoStateType::getChoices() as $choice => $value) {
+                if ($choice === $datas['status']) $todo->setState($value);
+            }
 
-            $todo->addCategory($newCategory);
+            // CATEGORIES
+            $categoriesList = $categoryRepository->findBy(['user' => $this->getUser()]);
+            foreach ($datas['categories'] as $dataCategory) {
+                foreach ($categoriesList as $category) {
+                    if ($category->getName() === $dataCategory) {
+                        $todo->addCategory($category);
+                    }
+                }
+            }
 
-            $this->getDoctrine()->getManager()->persist($todo);
-            $this->getDoctrine()->getManager()->flush();
-
-
-
+            try {
+                $this->getDoctrine()->getManager()->persist($todo);
+                $this->getDoctrine()->getManager()->flush();
+            } catch (\Exception $exception) {
+                return $this->createApiResponse("Cannot add task : " . $exception->getMessage(), 400);
+            }
 
             return $this->createApiResponse("create todo success !", 200);
         }

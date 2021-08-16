@@ -64,6 +64,8 @@ const initialValues = {
     title: '',
     description: '',
     note: '',
+    status: '',
+    categories: [],
 }
 
 const AddTask = () => {
@@ -80,7 +82,7 @@ const AddTask = () => {
         if (isStatusListSuccess) setStatusList(status);
     }, [isCategoriesSuccess, isStatusListSuccess]);
 
-    const handleInputChange = (event) => {
+    const handleChange = (event) => {
         const {name, value} = event.target;
 
         setValues({
@@ -108,7 +110,7 @@ const AddTask = () => {
                         <Typography className={classes.heading}>Add new task</Typography>
                     </div>
                     <BasicTextFields name="title" placeholder="Task title" inputWidth={classes.primaryInputWidth}
-                                     values={values.title} onChange={handleInputChange}/>
+                                     values={values.title} onChange={handleChange}/>
                 </AccordionSummary>
                 <AccordionDetails className={classes.details}>
                     <Grid container className={classes.gridInputContainer}>
@@ -121,7 +123,7 @@ const AddTask = () => {
                                 rowsMax={4}
                                 inputWidth={classes.secondaryInputWidth}
                                 values={values.description}
-                                onChange={handleInputChange}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item>
@@ -133,7 +135,7 @@ const AddTask = () => {
                                 rowsMax={2}
                                 inputWidth={classes.secondaryInputWidth}
                                 values={values.note}
-                                onChange={handleInputChange}
+                                onChange={handleChange}
                             />
                         </Grid>
                     </Grid>
@@ -165,13 +167,13 @@ const AddTask = () => {
                 <AccordionDetails className={classes.details}>
                     <Grid container className={classes.selectContainer}>
                         <Grid item>
-                            <SelectMultipleChip label="Category" datas={categoriesList} isLoading={isCategoriesLoading}/>
+                            <SelectMultipleChip values={values.categories} name="categories" label="Category" datas={categoriesList} isLoading={isCategoriesLoading} onChange={handleChange}/>
                         </Grid>
                     </Grid>
                     <div className={clsx(classes.column, classes.helper)}>
                         <Grid container>
                             <Grid item>
-                                <SelectChip label="Status" datas={statusList} isLoading={isStatusListLoading}/>
+                                <SelectChip value={values.status} name="status" label="Status" datas={statusList} isLoading={isStatusListLoading} onChange={handleChange}/>
                             </Grid>
                         </Grid>
                     </div>

@@ -54,10 +54,9 @@ function getStyles(name, personName, theme) {
 }
 
 export default function MultipleSelect(props) {
-    const {label, datas, isLoading} = props;
+    const {values, label, datas, isLoading, name, onChange} = props;
     const classes = useStyles();
     const theme = useTheme();
-    const [values, setValues] = useState([]);
 
     useEffect(() => {
         if (isLoading && datas.length === 0) {
@@ -65,23 +64,20 @@ export default function MultipleSelect(props) {
         }
     }, [isLoading]);
 
-    const handleChange = (event) => {
-        setValues(event.target.value);
-    };
-
     return (
         <div>
             <FormControl className={classes.formControl}>
                 <InputLabel id="demo-mutiple-chip-label">{label}</InputLabel>
                 <Select
+                    name={name}
                     multiple
                     value={values}
-                    onChange={handleChange}
+                    onChange={onChange}
                     input={<Input id="demo-mutiple-chip"/>}
                     renderValue={(selected) => (
                         <div className={classes.chips}>
-                            {selected.map((values) => (
-                            <Chip key={values} label={values} className={classes.chip}/>
+                            {selected.map((values, index) => (
+                            <Chip key={index} label={values} className={classes.chip}/>
                             ))}
                         </div>
                     )}
