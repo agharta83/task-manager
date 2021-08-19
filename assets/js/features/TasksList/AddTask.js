@@ -5,13 +5,13 @@ import {
     AccordionDetails,
     AccordionSummary,
     Button,
+    Checkbox,
     Divider,
+    FormControlLabel,
     Grid,
     IconButton,
     makeStyles,
-    Typography,
-    FormControlLabel,
-    Checkbox
+    Typography
 } from "@material-ui/core";
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -22,7 +22,6 @@ import TimePickers from "../../Reusable/TimePickers";
 import SelectChip from "../../Reusable/SelectChip";
 import SelectMultipleChip from "../../Reusable/SelectMultipleChip";
 import {useAddTodoMutation, useGetCategoriesListQuery, useGetStatusListQuery} from "./TasksService";
-import {formatedDate} from "../../helpers/utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -85,11 +84,16 @@ const AddTask = () => {
     const classes = useStyles();
     const {data: categories, isLoading: isCategoriesLoading, isSuccess: isCategoriesSuccess} = useGetCategoriesListQuery(undefined, {refetchOnMountOrArgChange: true});
     const {data: status, isLoading: isStatusListLoading, isSuccess: isStatusListSuccess} = useGetStatusListQuery(undefined, {refetchOnMountOrArgChange: true});
-    const [ addTodo ] = useAddTodoMutation();
+    const [addTodo] = useAddTodoMutation();
     const [categoriesList, setCategoriesList] = useState([]);
     const [statusList, setStatusList] = useState([]);
     const [values, setValues] = useState(initialValues);
-    // const [selectedDate, setSelectedDate] = React.useState(date);
+    const [errors, setErrors] = useState(
+        {
+            title: "",
+            selectedDate: "",
+        }
+    );
 
     useEffect(() => {
         if (isCategoriesSuccess) setCategoriesList(categories);
@@ -122,8 +126,21 @@ const AddTask = () => {
     };
 
     const onSaveTask = () => {
-        addTodo(values);
-        setValues(initialValues);
+        if (values.title === "") {
+            setErrors({
+                ...errors,
+                title: 'Title cannot be empty !'
+            });
+        } else if (values.selectedDate && values) {
+            setErrors({
+                ...errors,
+                selectedDate: 'You should select date !'
+            })
+        } else {
+            addTodo(values);
+            setValues(initialValues);
+        }
+
     }
 
     return (
@@ -139,7 +156,8 @@ const AddTask = () => {
                         <Typography className={classes.heading}>Add new task</Typography>
                     </div>
                     <BasicTextFields name="title" placeholder="Task title" inputWidth={classes.primaryInputWidth}
-                                     values={values.title} onChange={handleChange}/>
+                                     values={values.title} onChange={handleChange} error={errors.title}
+                                     helperText={errors.title}/>
                 </AccordionSummary>
                 <AccordionDetails className={classes.details}>
                     <Grid container className={classes.gridInputContainer}>
@@ -199,7 +217,9 @@ const AddTask = () => {
                                 </Typography>
                             </Grid>
                             <Grid item xs={7} className={classes.align}>
-                                <DatePickers name="selectedDate" date={values.selectedDate} disabled={!values.scheduled} onChange={handleDateChange}/>
+                                <DatePickers name="selectedDate" date={values.selectedDate} disabled={!values.scheduled}
+                                             onChange={handleDateChange} errors={errors.selectedDate}
+                                             helperText={errors.selectedDate}/>
                             </Grid>
                         </Grid>
                         <Grid container spacing={1}>
