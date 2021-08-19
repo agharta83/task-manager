@@ -22,6 +22,7 @@ import TimePickers from "../../Reusable/TimePickers";
 import SelectChip from "../../Reusable/SelectChip";
 import SelectMultipleChip from "../../Reusable/SelectMultipleChip";
 import {useAddTodoMutation, useGetCategoriesListQuery, useGetStatusListQuery} from "./TasksService";
+import {formatedDate} from "../../helpers/utils";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -121,19 +122,9 @@ const AddTask = () => {
     };
 
     const onSaveTask = () => {
-        // TODO refacto this method to generic and reuse in other component
-        const date = values.selectedDate;
-        const [month, day, year] = [date.getMonth() + 1, date.getDate(), date.getFullYear()]; // Because getMonth methods begin at index 0
-
-        setValues({
-            ...values,
-            selectedDate: year + '-' + month + '-' + day,
-        })
-
         addTodo(values);
         setValues(initialValues);
     }
-
 
     return (
 

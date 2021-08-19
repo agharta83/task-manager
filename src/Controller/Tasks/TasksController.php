@@ -7,6 +7,7 @@ namespace App\Controller\Tasks;
 use App\Controller\BaseController;
 use App\DBAL\Types\TodoStateType;
 use App\Entity\Category;
+use App\Entity\ScheduledTodo;
 use App\Entity\Todo;
 use App\Repository\CategoryRepository;
 use DateTime;
@@ -62,10 +63,11 @@ class TasksController extends BaseController
      * @param CategoryRepository $categoryRepository
      * @return Response
      * @IsGranted("ROLE_USER", statusCode=404, message="Unauthorized access !")
+     * @throws \Exception
      */
     public function createTodo(Request $request, CategoryRepository $categoryRepository): Response
     {
-        $datas = json_decode($request->getContent(), true);;
+        $datas = json_decode($request->getContent(), true);
 
         if ($datas === null) {
             throw new BadRequestHttpException(('Invalid JSON'));
@@ -92,6 +94,15 @@ class TasksController extends BaseController
                         $todo->addCategory($category);
                     }
                 }
+            }
+
+            // SCHEDULED
+            if ($datas['scheduled']) {
+                $todo->setScheduled($datas['scheduled']);
+                $scheduledTodo = new ScheduledTodo();
+                $scheduledTodo->setDate(new DateTime($datas['selectedDate']));
+                $scheduledTodo->setTime(new DateTime($datas['selectedTime']));
+                $todo->setScheduledTodo($scheduledTodo);
             }
 
             try {

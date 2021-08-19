@@ -57,6 +57,16 @@ class Todo
      */
     private ?User $user;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $scheduled;
+
+    /**
+     * @ORM\OneToOne(targetEntity=ScheduledTodo::class, mappedBy="todo", cascade={"persist", "remove"})
+     */
+    private $scheduledTodo;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
@@ -163,6 +173,35 @@ class Todo
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getScheduled(): ?bool
+    {
+        return $this->scheduled;
+    }
+
+    public function setScheduled(bool $scheduled): self
+    {
+        $this->scheduled = $scheduled;
+
+        return $this;
+    }
+
+    public function getScheduledTodo(): ?ScheduledTodo
+    {
+        return $this->scheduledTodo;
+    }
+
+    public function setScheduledTodo(ScheduledTodo $scheduledTodo): self
+    {
+        // set the owning side of the relation if necessary
+        if ($scheduledTodo->getTodo() !== $this) {
+            $scheduledTodo->setTodo($this);
+        }
+
+        $this->scheduledTodo = $scheduledTodo;
 
         return $this;
     }
