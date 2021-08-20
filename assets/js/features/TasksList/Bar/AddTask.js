@@ -16,12 +16,12 @@ import {
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from "clsx";
-import BasicTextFields from "../../Reusable/BasicTextFields";
-import DatePickers from "../../Reusable/DatePickers";
-import TimePickers from "../../Reusable/TimePickers";
-import SelectChip from "../../Reusable/SelectChip";
-import SelectMultipleChip from "../../Reusable/SelectMultipleChip";
-import {useAddTodoMutation, useGetCategoriesListQuery, useGetStatusListQuery} from "./TasksService";
+import BasicTextFields from "../../../Reusable/BasicTextFields";
+import DatePickers from "../../../Reusable/DatePickers";
+import TimePickers from "../../../Reusable/TimePickers";
+import SelectChip from "../../../Reusable/SelectChip";
+import SelectMultipleChip from "../../../Reusable/SelectMultipleChip";
+import {useAddTodoMutation, useGetCategoriesListQuery, useGetStatusListQuery} from "../TasksService";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -146,7 +146,7 @@ const AddTask = () => {
     return (
 
         <div className={classes.root}>
-            <Accordion defaultExpanded>
+            <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1c-content"
@@ -258,8 +258,8 @@ const AddTask = () => {
                 <AccordionDetails>
                     <Grid container>
                         <Grid item>
-                            <p>Attach File TODO</p>
-                            <p>Attach Link TODO</p>
+                            <p>Attach File FEATURE</p>
+                            <p>Attach Link FEATURE</p>
                         </Grid>
                     </Grid>
                 </AccordionDetails>
