@@ -1,27 +1,37 @@
 import React, {useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
+import clsx from "clsx";
+
 import {
     Accordion,
-    AccordionActions,
-    AccordionDetails,
     AccordionSummary,
     Button,
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    Grid,
-    IconButton,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     makeStyles,
-    Typography
+    FormControlLabel,
+    Checkbox,
+    AccordionDetails,
+    Grid,
+    Typography,
+    Tooltip,
+    Divider,
+    IconButton,
 } from "@material-ui/core";
-import WhatshotIcon from '@material-ui/icons/Whatshot';
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import clsx from "clsx";
+import WhatshotIcon from '@material-ui/icons/Whatshot';
+
+import {toggleModal} from "../TasksSlice";
+import {useAddTodoMutation, useGetCategoriesListQuery, useGetStatusListQuery} from "../TasksService";
+import SelectMultipleChip from "../../../Reusable/SelectMultipleChip";
 import BasicTextFields from "../../../Reusable/BasicTextFields";
+import SelectChip from "../../../Reusable/SelectChip";
 import DatePickers from "../../../Reusable/DatePickers";
 import TimePickers from "../../../Reusable/TimePickers";
-import SelectChip from "../../../Reusable/SelectChip";
-import SelectMultipleChip from "../../../Reusable/SelectMultipleChip";
-import {useAddTodoMutation, useGetCategoriesListQuery, useGetStatusListQuery} from "../TasksService";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: theme.typography.pxToRem(15),
     },
     details: {
+        display: 'flex',
         alignItems: 'center',
     },
     column: {
@@ -51,8 +62,7 @@ const useStyles = makeStyles((theme) => ({
     },
     primaryInputWidth: {
         '& > *': {
-            width: '34ch',
-            marginLeft: '16px',
+            width: '52ch',
         }
     },
     secondaryInputWidth: {
@@ -66,7 +76,13 @@ const useStyles = makeStyles((theme) => ({
     noMarginExpanded: {
         margin: '0px',
         maxHeight: '48px',
-    }
+    },
+    closeButton: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+        color: theme.palette.grey[500],
+    },
 }));
 
 const initialValues = {
@@ -80,11 +96,16 @@ const initialValues = {
     selectedTime: '08:30',
 }
 
-const AddTask = () => {
+// TODO treat priority END TaskListContent !
+
+const AddTask = (props) => {
     const classes = useStyles();
+    const {openDialog} = props;
+    const [open, setOpen] = React.useState(openDialog);
     const {data: categories, isLoading: isCategoriesLoading, isSuccess: isCategoriesSuccess} = useGetCategoriesListQuery(undefined, {refetchOnMountOrArgChange: true});
     const {data: status, isLoading: isStatusListLoading, isSuccess: isStatusListSuccess} = useGetStatusListQuery(undefined, {refetchOnMountOrArgChange: true});
     const [addTodo] = useAddTodoMutation();
+    const dispatch = useDispatch();
     const [categoriesList, setCategoriesList] = useState([]);
     const [statusList, setStatusList] = useState([]);
     const [values, setValues] = useState(initialValues);
@@ -94,11 +115,21 @@ const AddTask = () => {
             selectedDate: "",
         }
     );
+    const [priorityColor, setPriorityColor] = useState("secondary");
 
     useEffect(() => {
         if (isCategoriesSuccess) setCategoriesList(categories);
         if (isStatusListSuccess) setStatusList(status);
     }, [isCategoriesSuccess, isStatusListSuccess]);
+
+    useEffect(() => {
+        setOpen(openDialog);
+    }, [openDialog]);
+
+    const handleClose = () => {
+        setOpen(false);
+        dispatch(toggleModal());
+    };
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -116,13 +147,17 @@ const AddTask = () => {
             ...values,
             [name]: checked
         });
-    }
+    };
 
     const handleDateChange = (date) => {
         setValues({
             ...values,
             selectedDate: date,
         });
+    };
+
+    const handlePriorityColor = () => {
+        setPriorityColor(priorityColor === "secondary" ? "primary" : "secondary");
     };
 
     const onSaveTask = () => {
@@ -145,136 +180,131 @@ const AddTask = () => {
 
     return (
 
-        <div className={classes.root}>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
-                    aria-controls="panel1c-content"
-                    id="panel1c-header"
-                >
-                    <div className={classes.column}>
-                        <Typography className={classes.heading}>Add new task</Typography>
-                    </div>
-                    <BasicTextFields name="title" placeholder="Task title" inputWidth={classes.primaryInputWidth}
-                                     values={values.title} onChange={handleChange} error={errors.title}
-                                     helperText={errors.title}/>
-                </AccordionSummary>
-                <AccordionDetails className={classes.details}>
-                    <Grid container className={classes.gridInputContainer}>
-                        <Grid item>
-                            <BasicTextFields
-                                name="description"
-                                placeholder="Task description"
-                                multiline={true}
-                                rows={1}
-                                rowsMax={4}
-                                inputWidth={classes.secondaryInputWidth}
-                                values={values.description}
-                                onChange={handleChange}
+        <div>
+            <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                    Add new task
+                </DialogTitle>
+                <DialogContent dividers>
+                    <BasicTextFields
+                        name="title"
+                        placeholder="Task title"
+                        inputWidth={classes.primaryInputWidth}
+                        values={values.title}
+                        onChange={handleChange}
+                        error={errors.title}
+                        helperText={errors.title}/>
+
+                    <BasicTextFields
+                        name="description"
+                        placeholder="Task description"
+                        multiline={true}
+                        rows={1}
+                        rowsMax={4}
+                        inputWidth={classes.secondaryInputWidth}
+                        values={values.description}
+                        onChange={handleChange}
+                    />
+                    <BasicTextFields
+                        name="note"
+                        placeholder="Note"
+                        multiline={true}
+                        rows={1}
+                        rowsMax={2}
+                        inputWidth={classes.secondaryInputWidth}
+                        values={values.note}
+                        onChange={handleChange}
+                    />
+
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                            aria-label="Expand"
+                            aria-controls="additional-actions1-content"
+                            id="additional-actions1-header"
+                            classes={{
+                                content: classes.noMargin,
+                            }}
+                        >
+                            <FormControlLabel
+                                aria-label="Acknowledge"
+                                onClick={(event) => event.stopPropagation()}
+                                onFocus={(event) => event.stopPropagation()}
+                                control={<Checkbox name="scheduled" checked={values.scheduled}
+                                                   onChange={handleCheckboxChange}/>}
+                                label="Schedule a due"
                             />
-                        </Grid>
-                        <Grid item>
-                            <BasicTextFields
-                                name="note"
-                                placeholder="Note"
-                                multiline={true}
-                                rows={1}
-                                rowsMax={2}
-                                inputWidth={classes.secondaryInputWidth}
-                                values={values.note}
-                                onChange={handleChange}
-                            />
-                        </Grid>
-                    </Grid>
+                        </AccordionSummary>
+                        <AccordionDetails>
 
-                </AccordionDetails>
+                            <Grid container spacing={1}>
 
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-label="Expand"
-                        aria-controls="additional-actions1-content"
-                        id="additional-actions1-header"
-                        classes={{
-                            content: classes.noMargin,
-                        }}
-                    >
-                        <FormControlLabel
-                            aria-label="Acknowledge"
-                            onClick={(event) => event.stopPropagation()}
-                            onFocus={(event) => event.stopPropagation()}
-                            control={<Checkbox name="scheduled" checked={values.scheduled} onChange={handleCheckboxChange}/>}
-                            label="Schedule a due"
-                        />
-                    </AccordionSummary>
-                    <AccordionDetails>
-
-                        <Grid container spacing={1}>
-
-                            <Grid item xs={4} className={classes.align}>
-                                <Typography variant="caption">
-                                    Select date
-                                </Typography>
+                                <Grid item xs={4} className={classes.align}>
+                                    <Typography variant="caption">
+                                        Select date
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={7} className={classes.align}>
+                                    <DatePickers name="selectedDate" date={values.selectedDate}
+                                                 disabled={!values.scheduled}
+                                                 onChange={handleDateChange} errors={errors.selectedDate}
+                                                 helperText={errors.selectedDate}/>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={7} className={classes.align}>
-                                <DatePickers name="selectedDate" date={values.selectedDate} disabled={!values.scheduled}
-                                             onChange={handleDateChange} errors={errors.selectedDate}
-                                             helperText={errors.selectedDate}/>
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={1}>
-                            <Grid item xs={6} className={classes.align}>
-                                <Typography variant="caption">
-                                    Select hours
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={6} className={classes.align}>
-                                <TimePickers name="selectedTime" disabled={!values.scheduled} defaultValue={values.seletedTime} onChange={handleChange}/>
-                            </Grid>
+                            <Grid container spacing={1}>
+                                <Grid item xs={6} className={classes.align}>
+                                    <Typography variant="caption">
+                                        Select hours
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} className={classes.align}>
+                                    <TimePickers name="selectedTime" disabled={!values.scheduled}
+                                                 defaultValue={values.selectedTime} onChange={handleChange}/>
+                                </Grid>
 
-                        </Grid>
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
 
-                    </AccordionDetails>
-                </Accordion>
-
-                <AccordionDetails className={classes.details}>
-                    <Grid container className={classes.selectContainer}>
-                        <Grid item>
-                            <SelectMultipleChip values={values.categories} name="categories" label="Category"
-                                                datas={categoriesList} isLoading={isCategoriesLoading}
-                                                onChange={handleChange}/>
-                        </Grid>
-                    </Grid>
-                    <div className={clsx(classes.column, classes.helper)}>
-                        <Grid container>
+                    <div className={classes.details}>
+                        <Grid container className={classes.selectContainer}>
                             <Grid item>
-                                <SelectChip value={values.status} name="status" label="Status" datas={statusList} isLoading={isStatusListLoading} onChange={handleChange}/>
+                                <SelectMultipleChip values={values.categories} name="categories" label="Category"
+                                                    datas={categoriesList} isLoading={isCategoriesLoading}
+                                                    onChange={handleChange}/>
                             </Grid>
                         </Grid>
+                        <div className={clsx(classes.column, classes.helper)}>
+                            <Grid container>
+                                <Grid item>
+                                    <SelectChip value={values.status} name="status" label="Status" datas={statusList}
+                                                isLoading={isStatusListLoading} onChange={handleChange}/>
+                                </Grid>
+                            </Grid>
+                        </div>
                     </div>
-                </AccordionDetails>
 
-                <Divider/>
-                <AccordionDetails>
+                    <Divider/>
                     <Grid container>
                         <Grid item>
                             <p>Attach File FEATURE</p>
                             <p>Attach Link FEATURE</p>
                         </Grid>
                     </Grid>
-                </AccordionDetails>
 
-
-                <Divider/>
-                <AccordionActions>
-                    <IconButton color="secondary" aria-label="higth priority">
-                        <WhatshotIcon/>
-                    </IconButton>
+                </DialogContent>
+                <DialogActions>
+                    <Tooltip title="High priority" placement="top-start">
+                        <IconButton color={priorityColor} aria-label="higth priority">
+                            <WhatshotIcon onClick={handlePriorityColor}/>
+                        </IconButton>
+                    </Tooltip>
                     <Button size="small">Cancel</Button>
                     <Button size="small" color="primary" onClick={onSaveTask}>Save</Button>
-                </AccordionActions>
-            </Accordion>
+                </DialogActions>
+            </Dialog>
         </div>
+
     )
 }
 
