@@ -80,6 +80,7 @@ class TasksController extends BaseController
             $todo->setDescription($datas['description']);
             $todo->setNote($datas['note']);
             $todo->setDateCreate(new DateTime('now'));
+            $todo->setPriority($datas['priority']);
 
             // STATE
             foreach (TodoStateType::getChoices() as $choice => $value) {
@@ -97,8 +98,8 @@ class TasksController extends BaseController
             }
 
             // SCHEDULED
+            $todo->setScheduled($datas['scheduled']);
             if ($datas['scheduled']) {
-                $todo->setScheduled($datas['scheduled']);
                 $scheduledTodo = new ScheduledTodo();
                 $scheduledTodo->setDate(new DateTime($datas['selectedDate']));
                 $scheduledTodo->setTime(new DateTime($datas['selectedTime']));

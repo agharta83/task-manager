@@ -94,9 +94,10 @@ const initialValues = {
     scheduled : false,
     selectedDate: new Date(),
     selectedTime: '08:30',
+    priority: false,
 }
 
-// TODO treat priority END TaskListContent !
+// TODO treat priority END TaskListContent END reusable dialog component !
 
 const AddTask = (props) => {
     const classes = useStyles();
@@ -125,6 +126,11 @@ const AddTask = (props) => {
     useEffect(() => {
         setOpen(openDialog);
     }, [openDialog]);
+
+    useEffect(() => {
+        if (values.priority) setPriorityColor("primary");
+        if (!values.priority) setPriorityColor("secondary");
+    }, [values.priority]);
 
     const handleClose = () => {
         setOpen(false);
@@ -156,8 +162,13 @@ const AddTask = (props) => {
         });
     };
 
-    const handlePriorityColor = () => {
-        setPriorityColor(priorityColor === "secondary" ? "primary" : "secondary");
+    const handlePriority = () => {
+        console.log(values.priority)
+
+        setValues({
+            ...values,
+            priority: !values.priority,
+        });
     };
 
     const onSaveTask = () => {
@@ -166,7 +177,7 @@ const AddTask = (props) => {
                 ...errors,
                 title: 'Title cannot be empty !'
             });
-        } else if (values.selectedDate && values) {
+        } else if (values.scheduled && values.selectedDate === "") {
             setErrors({
                 ...errors,
                 selectedDate: 'You should select date !'
@@ -295,8 +306,8 @@ const AddTask = (props) => {
                 </DialogContent>
                 <DialogActions>
                     <Tooltip title="High priority" placement="top-start">
-                        <IconButton color={priorityColor} aria-label="higth priority">
-                            <WhatshotIcon onClick={handlePriorityColor}/>
+                        <IconButton color={priorityColor} aria-label="higth priority" onClick={handlePriority}>
+                            <WhatshotIcon />
                         </IconButton>
                     </Tooltip>
                     <Button size="small">Cancel</Button>

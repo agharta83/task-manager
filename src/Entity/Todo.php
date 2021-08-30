@@ -60,12 +60,17 @@ class Todo
     /**
      * @ORM\Column(type="boolean")
      */
-    private $scheduled;
+    private ?bool $scheduled;
 
     /**
      * @ORM\OneToOne(targetEntity=ScheduledTodo::class, mappedBy="todo", cascade={"persist", "remove"})
      */
-    private $scheduledTodo;
+    private ?ScheduledTodo $scheduledTodo;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private ?bool $priority;
 
     public function __construct()
     {
@@ -202,6 +207,18 @@ class Todo
         }
 
         $this->scheduledTodo = $scheduledTodo;
+
+        return $this;
+    }
+
+    public function getPriority(): ?bool
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(bool $priority): self
+    {
+        $this->priority = $priority;
 
         return $this;
     }

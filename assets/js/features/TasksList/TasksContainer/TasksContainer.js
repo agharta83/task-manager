@@ -11,7 +11,6 @@ const TasksContainer = () => {
             <TaskBar />
             <TaskDrawer />
             <TaskListContent />
-
         </Container>
     )
 }
