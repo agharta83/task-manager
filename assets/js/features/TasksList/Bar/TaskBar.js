@@ -11,9 +11,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectShowModal, toggleModal} from "../TasksSlice";
 
 const useStyles = makeStyles((theme) => ({
-    headerContainer: {
-        flexGrow: 1,
-    },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
         borderTopLeftRadius: '10px',
@@ -29,8 +26,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// TODO ajouter un btn et basculer sur une popin (Dialog mui component) pour ajouter une tache
-
 export default function TaskBar() {
     const classes = useStyles();
     const showModal = useSelector(selectShowModal);
@@ -41,24 +36,21 @@ export default function TaskBar() {
     }
 
     return (
-        <div className={classes.headerContainer}>
+        <AppBar position="static" className={classes.appBar}>
+            <Toolbar className={classes.toolbar}>
+                <Tooltip title="Add task" placement="top-start">
+                    <Fab aria-label="delete" color="secondary">
+                        <AddCircle className={classes.icon} onClick={handleClickOpen}/>
+                    </Fab>
+                </Tooltip>
 
-            <AppBar position="static" className={classes.appBar}>
-                <Toolbar className={classes.toolbar}>
-                    <Tooltip title="Add task" placement="top-start">
-                        <Fab aria-label="delete" color="secondary">
-                            <AddCircle className={classes.icon} onClick={handleClickOpen}/>
-                        </Fab>
-                    </Tooltip>
+                <Typography className={classes.title} variant="h6" noWrap>
+                    task manager
+                </Typography>
 
-                    <Typography className={classes.title} variant="h6" noWrap>
-                        task manager
-                    </Typography>
+                <AddTask openDialog={showModal}/>
 
-                    <AddTask openDialog={showModal}/>
-
-                </Toolbar>
-            </AppBar>
-        </div>
+            </Toolbar>
+        </AppBar>
     )
 }

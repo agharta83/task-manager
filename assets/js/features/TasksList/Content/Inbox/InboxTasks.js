@@ -1,6 +1,4 @@
 import React from "react";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -10,13 +8,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-export default function TaskListContent(props) {
+export default function InboxTasks() {
     const classes = useStyles();
 
     return (
-        <main className={classes.content}>
-            {props.children}
-        </main>
+        <h1>TEST</h1>
     )
 }
