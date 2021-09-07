@@ -309,7 +309,7 @@ const AddTask = (props) => {
                             <WhatshotIcon />
                         </IconButton>
                     </Tooltip>
-                    <Button size="small">Cancel</Button>
+                    <Button size="small" onClick={handleClose}>Cancel</Button>
                     <Button size="small" color="primary" onClick={onSaveTask}>Save</Button>
                 </DialogActions>
             </Dialog>
