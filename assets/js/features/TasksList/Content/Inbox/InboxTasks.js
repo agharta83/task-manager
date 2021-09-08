@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 export default function InboxTasks() {
     const classes = useStyles();
     const {data = [], isLoading, isFetching, isSuccess} = useGetListActiveTodosQuery(undefined, {refetchOnMountOrArgChange: true});
-    const [checked, setChecked] = React.useState([0]);
+    // const [checked, setChecked] = React.useState([0]);
     const [selectedIndex, setSelectedIndex] = React.useState();
     const [activeTasksList, setActiveTasksList] = useState([]);
 
@@ -55,23 +55,29 @@ export default function InboxTasks() {
     }, [isLoading]);
 
     const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+        const tasks = activeTasksList.map((task) => {
+            if (task.id === value) {
+                if (task.state === "Done") {
+                    return {
+                        ...task,
+                        state: "Waiting" // TODO when task pass in not check -> check -> not check we must find initial state
+                    }
+                }
+                return {
+                    ...task,
+                    state: "Done"
+                }
+            }
 
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
+            return task;
+        });
 
-        setChecked(newChecked);
+        setActiveTasksList(tasks);
     };
 
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
     };
-
-    console.log(data);
 
     return (
         <div className={classes.root}>
@@ -92,10 +98,10 @@ export default function InboxTasks() {
                                 <ListItemIcon>
                                     <Checkbox
                                         edge="start"
-                                        checked={checked.indexOf(index) !== -1}
+                                        checked={task.state === "Done"}
                                         tabIndex={-1}
                                         disableRipple
-                                        onClick={handleToggle(index)}
+                                        onClick={handleToggle(task.id)}
                                         inputProps={{'aria-labelledby': labelId}}
                                     />
                                 </ListItemIcon>
