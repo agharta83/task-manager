@@ -4,7 +4,9 @@ import {authApi} from "../features/Auth/AuthService";
 import {setupListeners} from "@reduxjs/toolkit/query";
 import {profileApi} from "../features/Profile/ProfileService";
 import profile from "../features/Profile/ProfileSlice";
+import tasks from "../features/TasksList/TasksSlice";
 import StateCacheStorage from "../helpers/StateCacheStorage";
+import {tasksApi} from "../features/TasksList/TasksService";
 
 const initialState = StateCacheStorage.get("APP_STATE");
 
@@ -13,13 +15,15 @@ export const store = configureStore({
         // Add the generated reducer as a specific top-level slice
         [authApi.reducerPath]: authApi.reducer,
         [profileApi.reducerPath]: profileApi.reducer,
+        [tasksApi.reducerPath]: tasksApi.reducer,
         auth,
         profile,
+        tasks,
     },
     // Adding the api middleware enables caching, invalidation, polling,
     // and other useful features of `rtk-query`.
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(authApi.middleware, profileApi.middleware),
+        getDefaultMiddleware().concat(authApi.middleware, profileApi.middleware, tasksApi.middleware),
     preloadedState: initialState
 });
 

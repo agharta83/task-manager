@@ -6,7 +6,7 @@ import PowerOff from "../../img/power-off-solid.svg";
 
 // StyledComponent
 import {Container, SidebarContainer, Button, Logo, SlickBar, Item, Text, Profile, Details, Name, Logout} from "../../Theme/StyledComponents/Sidebar";
-import {AccountTree, CalendarToday, Description, Group, Home} from "@material-ui/icons";
+import {AccountTree, CalendarToday, Description, Group, Home, ListAlt} from "@material-ui/icons";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import {UPLOADS_PATH} from "../../helpers/utils";
@@ -20,6 +20,11 @@ const tabsItem = [
         title: 'Home',
         link: '/home',
         icon: <Home />,
+    },
+    {
+        title: 'Tasks',
+        link: '/taskslist',
+        icon: <ListAlt />,
     },
     {
         title: 'Team',
@@ -41,7 +46,6 @@ const tabsItem = [
         link: '/projects',
         icon: <AccountTree />,
     },
-
 ];
 
 const Sidebar = () => {

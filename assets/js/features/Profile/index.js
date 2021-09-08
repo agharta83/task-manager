@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Favorite, Payment as PaymentIcon, Person, Settings as SettingsIcon, Subscriptions} from '@material-ui/icons';
 import {Container, Item, TabContainer, TitleContainer} from "../../Theme/StyledComponents/Profile";
 import ProfileSettingBarHoc from "../HOC/ProfileSettingBarHoc";

@@ -41,6 +41,8 @@ security:
 
         # allow authenticated users to access profile endpoint
         - { path: ^/api/profile, roles: ROLE_USER }
+        # allow authenticated users to access category endpoint
+        - { path: ^/api/category, roles: ROLE_USER }
 
 
         # but require authentication for all other admin routes
