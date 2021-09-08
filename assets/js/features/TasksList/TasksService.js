@@ -25,12 +25,19 @@ export const tasksApi = createApi({
                 method: 'post',
                 data: JSON.stringify(values),
             })
-        })
+        }),
+        getListActiveTodos: builder.query({
+            query: () => ({
+                url: 'list-todos',
+                method: 'get',
+            }),
+        }),
     }),
 });
 
 export const {
     useGetCategoriesListQuery,
     useGetStatusListQuery,
+    useGetListActiveTodosQuery,
     useAddTodoMutation,
 } = tasksApi;

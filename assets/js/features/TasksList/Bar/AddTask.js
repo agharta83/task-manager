@@ -97,8 +97,6 @@ const initialValues = {
     priority: false,
 }
 
-// TODO treat priority END TaskListContent END reusable dialog component !
-
 const AddTask = (props) => {
     const classes = useStyles();
     const {openDialog} = props;

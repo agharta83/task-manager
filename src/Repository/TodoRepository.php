@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DBAL\Types\TodoStateType;
 use App\Entity\Todo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,22 +20,21 @@ class TodoRepository extends ServiceEntityRepository
         parent::__construct($registry, Todo::class);
     }
 
-    // /**
-    //  * @return Todo[] Returns an array of Todo objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param $value
+     * @return Todo[] Returns an array of Todo objects
+     */
+    public function findActiveTodosByUser($value)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->where('t.user = :val');
+        $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('t.state', ':state')));
+        $queryBuilder->setParameter('val', $value);
+        $queryBuilder->setParameter('state', TodoStateType::DELETED);
+
+        return $queryBuilder->getQuery()->getArrayResult();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Todo

@@ -10,8 +10,11 @@ use App\Entity\Category;
 use App\Entity\ScheduledTodo;
 use App\Entity\Todo;
 use App\Repository\CategoryRepository;
+use App\Repository\TodoRepository;
 use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -63,7 +66,7 @@ class TasksController extends BaseController
      * @param CategoryRepository $categoryRepository
      * @return Response
      * @IsGranted("ROLE_USER", statusCode=404, message="Unauthorized access !")
-     * @throws \Exception
+     * @throws Exception
      */
     public function createTodo(Request $request, CategoryRepository $categoryRepository): Response
     {
@@ -109,7 +112,7 @@ class TasksController extends BaseController
             try {
                 $this->getDoctrine()->getManager()->persist($todo);
                 $this->getDoctrine()->getManager()->flush();
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 return $this->createApiResponse("Cannot add task : " . $exception->getMessage(), 400);
             }
 
@@ -117,5 +120,28 @@ class TasksController extends BaseController
         }
 
         return $this->createApiResponse("user is not authenticated", 400);
+    }
+
+    /**
+     * @Route("/api/tasks/list-todos", name="app_tasks_list", methods={"GET"})
+     * @param TodoRepository $todoRepository
+     * @return Response
+     * @IsGranted("ROLE_USER", statusCode=404, message="Unauthorized access !")
+     */
+    public function getActiveTodos(TodoRepository $todoRepository): Response
+    {
+        $data = [];
+        $todosList = $todoRepository->findActiveTodosByUser($this->getUser());
+
+        if (!empty($todosList)) {
+            foreach ($todosList as $index => $todo) {
+                $name = TodoStateType::getReadableValue($todo['state']);
+                $todosList[$index]['state'] = $name;
+            }
+
+            return $this->createApiResponse($todosList, Response::HTTP_OK);
+        }
+
+        return $this->createApiResponse($data, 400);
     }
 }
